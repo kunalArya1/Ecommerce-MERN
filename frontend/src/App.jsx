@@ -1,6 +1,13 @@
+import { Outlet } from "react-router-dom";
 import "./App.css";
+import Header from "./components/Header";
 const App = () => {
-  return <div className="bg-red-600">App</div>;
+  return (
+    <div>
+      <Header />
+      <Outlet />
+    </div>
+  );
 };
 
 export default App;
