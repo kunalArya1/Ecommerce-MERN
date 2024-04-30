@@ -5,7 +5,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 const Header = () => {
   return (
-    <header className="h-16 shadow-md">
+    <header className="h-16 shadow-md bg-white">
       <div className="h-full container mx-auto flex items-center px-2 justify-between">
         <div className="cursor-pointer">
           <Link to={"/"}>
@@ -37,11 +37,11 @@ const Header = () => {
               <FaShoppingCart className="w-10 h-10 cursor-pointer" />
             </Link>
           </div>
-          <div>
+          <Link to="login">
             <button className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700">
               Login
             </button>
-          </div>
+          </Link>
         </div>
       </div>
     </header>
