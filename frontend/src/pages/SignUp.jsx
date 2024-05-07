@@ -4,21 +4,24 @@ import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import ImageTobase64 from "../helpers/Imagebase64";
+import toast from "react-hot-toast";
+import axios from "axios";
 const SignUp = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [confirmShowPassword, setShowConfirmPassword] = useState(false);
-  const [data, setData] = useState({
+  const users = {
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
     profilePic: "",
-  });
+  };
+  const [showPassword, setShowPassword] = useState(false);
+  const [confirmShowPassword, setShowConfirmPassword] = useState(false);
+  const [user, setUser] = useState(users);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
-    setData((preve) => {
+    setUser((preve) => {
       return {
         ...preve,
         [name]: value,
@@ -28,13 +31,22 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("data login", data);
+    // console.log("data login", data);
+
+    try {
+      const res = await axios.post("/api/sign-up/", user);
+      toast.success("User signed up successfully", { position: "top-right" });
+      console.log(res.data);
+      setUser(users);
+    } catch (error) {
+      toast("User can't register", { position: "top-right" });
+    }
   };
 
   const handleUploadPic = async (e) => {
     const file = e.target.files[0];
     const imagePic = await ImageTobase64(file);
-    setData((preve) => {
+    setUser((preve) => {
       return {
         ...preve,
         profilePic: imagePic,
@@ -48,7 +60,7 @@ const SignUp = () => {
         <div className="bg-white shadow-md p-5 w-full max-w-sm mx-auto">
           <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
             <div>
-              <img src={data.profilePic || loginIcons} alt="login icons" />
+              <img src={user.profilePic || loginIcons} alt="login icons" />
             </div>
             <form>
               <label>
@@ -73,7 +85,7 @@ const SignUp = () => {
                   placeholder="enter name"
                   required
                   name="name"
-                  value={data.name}
+                  value={user.name}
                   onChange={handleOnChange}
                   className="w-full h-full outline-none bg-transparent"
                 />
@@ -87,7 +99,7 @@ const SignUp = () => {
                   placeholder="enter email"
                   required
                   name="email"
-                  value={data.email}
+                  value={user.email}
                   onChange={handleOnChange}
                   className="w-full h-full outline-none bg-transparent"
                 />
@@ -101,7 +113,7 @@ const SignUp = () => {
                   type={showPassword ? "text" : "password"}
                   placeholder="enter password"
                   required
-                  value={data.password}
+                  value={user.password}
                   name="password"
                   onChange={handleOnChange}
                   className="w-full h-full outline-none bg-transparent"
@@ -121,7 +133,7 @@ const SignUp = () => {
                   type={confirmShowPassword ? "text" : "password"}
                   placeholder="enter password"
                   required
-                  value={data.confirmPassword}
+                  value={user.confirmPassword}
                   name="confirmPassword"
                   onChange={handleOnChange}
                   className="w-full h-full outline-none bg-transparent"

@@ -21,4 +21,4 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-app.use("/", router);
+app.use("/api", router);

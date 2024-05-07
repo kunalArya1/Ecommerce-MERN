@@ -1,5 +1,5 @@
 import { userModel } from "../models/userModel.js";
-
+import bcryptjs from "bcryptjs";
 export const userSignUpController = async (req, res) => {
   try {
     const { name, email, password, profilePic } = req.body;
@@ -14,11 +14,11 @@ export const userSignUpController = async (req, res) => {
     if (!password) {
       throw new Error("Please provide password");
     }
-
+    const hashedPassword = bcryptjs.hashSync(password, 10);
     const newUser = new userModel({
       name,
       email,
-      password,
+      password: hashedPassword,
       profilePic,
     });
     await newUser.save();
