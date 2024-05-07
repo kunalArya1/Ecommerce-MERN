@@ -2,9 +2,11 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import bodyParser from "body-parser";
 import router from "./routes/routes.js";
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;
@@ -19,4 +21,4 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-// app.use("/", router);
+app.use("/", router);
