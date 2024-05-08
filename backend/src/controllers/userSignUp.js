@@ -3,7 +3,10 @@ import bcryptjs from "bcryptjs";
 export const userSignUpController = async (req, res) => {
   try {
     const { name, email, password, profilePic } = req.body;
-
+    const user = userModel.findOne({ email });
+    if (user) {
+      throw new Error("User Already Registered");
+    }
     if (!name) {
       throw new Error("Please provide name");
     }
@@ -26,7 +29,7 @@ export const userSignUpController = async (req, res) => {
     return res.status(201).json(newUser);
   } catch (error) {
     res.json({
-      mesaage: error,
+      message: error.message || error,
       error: true,
       success: false,
     });

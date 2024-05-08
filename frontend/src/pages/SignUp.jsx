@@ -17,7 +17,8 @@ const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [confirmShowPassword, setShowConfirmPassword] = useState(false);
   const [user, setUser] = useState(users);
-
+  const [isError, setISError] = useState(false);
+  const [error, setError] = useState();
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
@@ -40,6 +41,8 @@ const SignUp = () => {
       setUser(users);
     } catch (error) {
       toast("User can't register", { position: "top-right" });
+      setISError(true);
+      setError(error);
     }
   };
 
@@ -157,6 +160,7 @@ const SignUp = () => {
             <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6">
               Login
             </button>
+            <p className="text-red-700 mt-5">{isError && error.message}</p>
           </form>
 
           <p className="my-5">
