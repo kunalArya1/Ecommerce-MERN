@@ -26,7 +26,12 @@ export const userSignUpController = async (req, res) => {
     });
     await newUser.save();
     console.log(newUser);
-    return res.status(201).json(newUser);
+    return res.status(201).json({
+      data: newUser,
+      success: true,
+      error: false,
+      message: "User created successfully",
+    });
   } catch (error) {
     res.json({
       message: error.message || error,
