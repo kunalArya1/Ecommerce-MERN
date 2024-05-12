@@ -3,7 +3,6 @@ import loginIcons from "../assets/signin.gif";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import ImageTobase64 from "../helpers/Imagebase64";
 import toast from "react-hot-toast";
 import axios from "axios";
 const SignUp = () => {
@@ -19,22 +18,30 @@ const SignUp = () => {
   const [user, setUser] = useState(users);
 
   const handleOnChange = (e) => {
-    const { name, value } = e.target;
-
-    setUser((preve) => {
-      return {
-        ...preve,
+    if (e.target.name === "profilePic") {
+      const file = e.target.files[0];
+      setUser((prevUser) => ({
+        ...prevUser,
+        profilePic: file,
+      }));
+    } else {
+      const { name, value } = e.target;
+      setUser((prevUser) => ({
+        ...prevUser,
         [name]: value,
-      };
-    });
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("data login", data);
-
+    const formData = new FormData();
+    formData.append("name", user.name);
+    formData.append("email", user.email);
+    formData.append("password", user.password);
+    formData.append("profilePic", user.profilePic);
     try {
-      const res = await axios.post("/api/sign-up/", user);
+      const res = await axios.post("/api/sign-up/", formData);
       toast.success("User signed up successfully", { position: "top-right" });
       console.log(res.data);
       setUser(users);
@@ -42,17 +49,7 @@ const SignUp = () => {
       toast("User can't register", { position: "top-right" });
       console.log("user cant register");
     }
-  };
-
-  const handleUploadPic = async (e) => {
-    const file = e.target.files[0];
-    const imagePic = await ImageTobase64(file);
-    setUser((preve) => {
-      return {
-        ...preve,
-        profilePic: imagePic,
-      };
-    });
+    console.log(user);
   };
 
   return (
@@ -71,7 +68,7 @@ const SignUp = () => {
                 <input
                   type="file"
                   className="hidden"
-                  onChange={handleUploadPic}
+                  onChange={handleOnChange}
                 />
               </label>
             </form>

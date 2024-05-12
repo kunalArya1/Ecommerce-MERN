@@ -5,9 +5,10 @@ export const userSignUpController = async (req, res) => {
   try {
     const { name, email, password } = req.body;
     const user = userModel.findOne({ email });
-    if (user) {
-      throw new Error("User Already Registered");
-    }
+    // if (user) {
+    //   console.log(user.name);
+    //   throw new Error("User Already Registered");
+    // }
     if (!name) {
       throw new Error("Please provide name");
     }
@@ -20,6 +21,7 @@ export const userSignUpController = async (req, res) => {
     }
     const fileUrl = await uploadOnCloudinary(req.file.path);
     const hashedPassword = bcryptjs.hashSync(password, 10);
+    console.log(fileUrl);
     const newUser = new userModel({
       name,
       email,
@@ -28,7 +30,7 @@ export const userSignUpController = async (req, res) => {
     });
     await newUser.save();
     console.log(newUser);
-    res.status(201).json({
+    return res.status(201).json({
       data: newUser,
       success: true,
       error: false,
