@@ -9,9 +9,9 @@ export const userSignUpController = async (req, res) => {
     //   console.log(user.name);
     //   throw new Error("User Already Registered");
     // }
-    if (!name) {
-      throw new Error("Please provide name");
-    }
+    // if (!name) {
+    //   throw new Error("Please provide name");
+    // }
     if (!email) {
       throw new Error("Please provide email");
     }
