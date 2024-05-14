@@ -3,14 +3,17 @@ import loginIcons from "../assets/signin.gif";
 import { FaEye } from "react-icons/fa";
 import { FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
-
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [user, setUser] = useState([]);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
-
+  const navigate = useNavigate();
   const handleOnChange = (e) => {
     const { name, value } = e.target;
 
@@ -24,6 +27,19 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      const res = await axios.post("/api/login", data);
+
+      setUser(res.data);
+      if (user.password !== data.password) {
+        toast.error("password is not correct");
+        return;
+      }
+      toast.success("user Login successfully");
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
