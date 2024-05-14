@@ -1,31 +1,33 @@
 import { useState } from "react";
 import loginIcons from "../assets/signin.gif";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+
 const SignUp = () => {
-  const users = {
+  const initialUserState = {
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
-    profilePic: null,
+    profilePicFile: null,
   };
+
   const [showPassword, setShowPassword] = useState(false);
-  const [confirmShowPassword, setShowConfirmPassword] = useState(false);
-  const [user, setUser] = useState(users);
+  const [confirmShowPassword, setConfirmShowPassword] = useState(false);
+  const [user, setUser] = useState(initialUserState);
+  const [error, setError] = useState(null);
 
   const handleOnChange = (e) => {
-    if (e.target.name === "profilePic") {
-      const file = e.target.files[0];
+    const { name, value, files } = e.target;
+    if (name === "profilePic" && files.length > 0) {
+      const file = files[0];
       setUser((prevUser) => ({
         ...prevUser,
-        profilePic: file,
+        profilePicFile: file,
       }));
     } else {
-      const { name, value } = e.target;
       setUser((prevUser) => ({
         ...prevUser,
         [name]: value,
@@ -35,21 +37,30 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (user.password !== user.confirmPassword) {
+      setError("Passwords do not match");
+      toast.error("Passwords do not match", { position: "top-right" });
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", user.name);
     formData.append("email", user.email);
     formData.append("password", user.password);
-    formData.append("profilePic", user.profilePic);
+    formData.append("profilePic", user.profilePicFile);
+
     try {
-      const res = await axios.post("/api/sign-up/", formData);
+      const res = await axios.post("/api/sign-up", formData);
       toast.success("User signed up successfully", { position: "top-right" });
-      console.log(res.data);
-      setUser(users);
+      setUser(initialUserState);
+      console.log(res);
+      setError(null);
     } catch (error) {
-      toast("User can't register", { position: "top-right" });
-      console.log("user cant register");
+      toast.error("User can't register", { position: "top-right" });
+      setError("User can't register");
+      console.error("User can't register", error);
     }
-    console.log(user);
   };
 
   return (
@@ -57,9 +68,14 @@ const SignUp = () => {
       <div className="mx-auto container p-4">
         <div className="bg-white shadow-md p-5 w-full max-w-sm mx-auto">
           <div className="w-20 h-20 mx-auto relative overflow-hidden rounded-full">
-            <div>
-              <img src={user.profilePic || loginIcons} alt="login icons" />
-            </div>
+            <img
+              src={
+                user.profilePicFile
+                  ? URL.createObjectURL(user.profilePicFile)
+                  : loginIcons
+              }
+              alt="profile"
+            />
             <form>
               <label>
                 <div className="text-xs bg-opacity-80 bg-slate-200 pb-4 pt-2 cursor-pointer text-center absolute bottom-0 w-full">
@@ -68,6 +84,7 @@ const SignUp = () => {
                 <input
                   type="file"
                   className="hidden"
+                  name="profilePic"
                   onChange={handleOnChange}
                 />
               </label>
@@ -80,7 +97,7 @@ const SignUp = () => {
               <div className="bg-slate-100 p-2">
                 <input
                   type="text"
-                  placeholder="enter name"
+                  placeholder="Enter name"
                   required
                   name="name"
                   value={user.name}
@@ -94,7 +111,7 @@ const SignUp = () => {
               <div className="bg-slate-100 p-2">
                 <input
                   type="email"
-                  placeholder="enter email"
+                  placeholder="Enter email"
                   required
                   name="email"
                   value={user.email}
@@ -109,7 +126,7 @@ const SignUp = () => {
               <div className="bg-slate-100 p-2 flex">
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="enter password"
+                  placeholder="Enter password"
                   required
                   value={user.password}
                   name="password"
@@ -118,7 +135,7 @@ const SignUp = () => {
                 />
                 <div
                   className="cursor-pointer text-xl"
-                  onClick={() => setShowPassword((preve) => !preve)}
+                  onClick={() => setShowPassword((prev) => !prev)}
                 >
                   <span>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
                 </div>
@@ -129,7 +146,7 @@ const SignUp = () => {
               <div className="bg-slate-100 p-2 flex">
                 <input
                   type={confirmShowPassword ? "text" : "password"}
-                  placeholder="enter password"
+                  placeholder="Enter password again"
                   required
                   value={user.confirmPassword}
                   name="confirmPassword"
@@ -138,7 +155,7 @@ const SignUp = () => {
                 />
                 <div
                   className="cursor-pointer text-xl"
-                  onClick={() => setShowConfirmPassword((preve) => !preve)}
+                  onClick={() => setConfirmShowPassword((prev) => !prev)}
                 >
                   <span>
                     {confirmShowPassword ? <FaEyeSlash /> : <FaEye />}
@@ -149,20 +166,20 @@ const SignUp = () => {
                 to={"/forgot-password"}
                 className="block w-fit ml-auto hover:underline hover:text-red-600"
               >
-                Forgot password ?
+                Forgot password?
               </Link>
             </div>
             <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6">
-              Login
+              Sign Up
             </button>
-            {/* <p className="text-red-700 mt-5">{isError && error.message}</p> */}
+            {error && <p className="text-red-700 mt-5">{error}</p>}
           </form>
 
           <p className="my-5">
-            Alredy Registered ?{" "}
+            Already Registered?{" "}
             <Link
               to={"/login"}
-              className=" text-red-600 hover:text-red-700 hover:underline"
+              className="text-red-600 hover:text-red-700 hover:underline"
             >
               Login
             </Link>

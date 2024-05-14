@@ -4,20 +4,21 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 export const userSignUpController = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const user = userModel.findOne({ email });
-    // if (user) {
-    //   console.log(user.name);
-    //   throw new Error("User Already Registered");
-    // }
-    // if (!name) {
-    //   throw new Error("Please provide name");
-    // }
-    if (!email) {
-      throw new Error("Please provide email");
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        message: "User already registered",
+        error: true,
+        success: false,
+      });
     }
 
-    if (!password) {
-      throw new Error("Please provide password");
+    if (!name || !email || !password) {
+      throw new Error("Please provide name, email, and password");
+    }
+
+    if (!req.file) {
+      throw new Error("Profile picture is required");
     }
     const fileUrl = await uploadOnCloudinary(req.file.path);
     const hashedPassword = bcryptjs.hashSync(password, 10);
@@ -37,8 +38,8 @@ export const userSignUpController = async (req, res) => {
       message: "User created successfully",
     });
   } catch (error) {
-    res.json({
-      message: error.message || error,
+    return res.status(500).json({
+      message: error.message || "Internal Server Error",
       error: true,
       success: false,
     });
