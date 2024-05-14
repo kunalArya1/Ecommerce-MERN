@@ -4,7 +4,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 const SignUp = () => {
   const initialUserState = {
     name: "",
@@ -18,7 +18,8 @@ const SignUp = () => {
   const [confirmShowPassword, setConfirmShowPassword] = useState(false);
   const [user, setUser] = useState(initialUserState);
   const [error, setError] = useState(null);
-
+  const navigate = useNavigate();
+  // const [userData, setUserData] = useState([]);
   const handleOnChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "profilePic" && files.length > 0) {
@@ -38,6 +39,14 @@ const SignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setError(null);
+
+    if (!user.name || !user.email || !user.password || !user.confirmPassword) {
+      setError("All fields are required");
+      toast.error("All fields are required", { position: "top-right" });
+      return;
+    }
+
     if (user.password !== user.confirmPassword) {
       setError("Passwords do not match");
       toast.error("Passwords do not match", { position: "top-right" });
@@ -55,10 +64,24 @@ const SignUp = () => {
       toast.success("User signed up successfully", { position: "top-right" });
       setUser(initialUserState);
       console.log(res);
-      setError(null);
+      // setUserData(res.data);
+      navigate("/login");
+      console.log(user);
     } catch (error) {
-      toast.error("User can't register", { position: "top-right" });
-      setError("User can't register");
+      if (error.response) {
+        if (error.response.status === 409) {
+          toast.error("User already registered", { position: "top-right" });
+          setError("User already registered");
+        } else {
+          toast.error(error.response.data.message || "User can't register", {
+            position: "top-right",
+          });
+          setError(error.response.data.message || "User can't register");
+        }
+      } else {
+        toast.error("An error occurred", { position: "top-right" });
+        setError("An error occurred");
+      }
       console.error("User can't register", error);
     }
   };
@@ -93,7 +116,7 @@ const SignUp = () => {
 
           <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
             <div className="grid">
-              <label>Name : </label>
+              <label>Name: </label>
               <div className="bg-slate-100 p-2">
                 <input
                   type="text"
@@ -107,7 +130,7 @@ const SignUp = () => {
               </div>
             </div>
             <div className="grid">
-              <label>Email : </label>
+              <label>Email: </label>
               <div className="bg-slate-100 p-2">
                 <input
                   type="email"
@@ -122,7 +145,7 @@ const SignUp = () => {
             </div>
 
             <div>
-              <label>Password : </label>
+              <label>Password: </label>
               <div className="bg-slate-100 p-2 flex">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -142,7 +165,7 @@ const SignUp = () => {
               </div>
             </div>
             <div>
-              <label>Confirm Password : </label>
+              <label>Confirm Password: </label>
               <div className="bg-slate-100 p-2 flex">
                 <input
                   type={confirmShowPassword ? "text" : "password"}
@@ -172,7 +195,7 @@ const SignUp = () => {
             <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6">
               Sign Up
             </button>
-            {error && <p className="text-red-700 mt-5">{error}</p>}
+            {error && <p className="text-red-700 mt-5 text-xl">{error}</p>}
           </form>
 
           <p className="my-5">

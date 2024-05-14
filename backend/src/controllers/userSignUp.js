@@ -6,7 +6,7 @@ export const userSignUpController = async (req, res) => {
     const { name, email, password } = req.body;
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({
+      return res.status(409).json({
         message: "User already registered",
         error: true,
         success: false,
@@ -28,6 +28,7 @@ export const userSignUpController = async (req, res) => {
       email,
       password: hashedPassword,
       profilePic: fileUrl,
+      role: "GENERAL",
     });
     await newUser.save();
     console.log(newUser);
