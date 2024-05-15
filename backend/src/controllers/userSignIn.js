@@ -47,6 +47,7 @@ export const userSignInController = async (req, res) => {
       message: "Sign in successful",
       error: false,
       success: true,
+      token,
     });
   } catch (error) {
     console.error("Error during sign-in:", error);

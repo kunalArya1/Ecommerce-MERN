@@ -1,41 +1,49 @@
 import { useState } from "react";
 import loginIcons from "../assets/signin.gif";
-import { FaEye } from "react-icons/fa";
-import { FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [user, setUser] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState({
     email: "",
     password: "",
   });
   const navigate = useNavigate();
+
   const handleOnChange = (e) => {
     const { name, value } = e.target;
-
-    setData((preve) => {
-      return {
-        ...preve,
-        [name]: value,
-      };
-    });
+    setData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!data.email || !data.password) {
+      toast.error("Please fill in all fields", { position: "top-right" });
+      return;
+    }
+
+    setIsLoading(true);
     try {
       const res = await axios.post("/api/login", data);
 
-      setUser(res.data);
-
-      toast.success("user Login successfully");
+      toast.success("User logged in successfully", { position: "top-right" });
+      setIsLoading(false);
+      console.log(res.data);
       navigate("/");
     } catch (error) {
-      console.log(error);
+      setIsLoading(false);
+      toast.error(
+        error.response?.data?.message || "An error occurred. Please try again.",
+        { position: "top-right" }
+      );
     }
   };
 
@@ -44,60 +52,68 @@ const Login = () => {
       <div className="mx-auto container p-4">
         <div className="bg-white shadow-md p-5 w-full max-w-sm mx-auto">
           <div className="w-20 h-20 mx-auto">
-            <img src={loginIcons} alt="login icons" />
+            <img src={loginIcons} alt="Login icon" />
           </div>
 
           <form className="pt-6 flex flex-col gap-2" onSubmit={handleSubmit}>
             <div className="grid">
-              <label>Email : </label>
+              <label htmlFor="email">Email:</label>
               <div className="bg-slate-100 p-2">
                 <input
+                  id="email"
                   type="email"
-                  placeholder="enter email"
+                  placeholder="Enter email"
                   name="email"
                   value={data.email}
                   onChange={handleOnChange}
                   className="w-full h-full outline-none bg-transparent"
+                  required
                 />
               </div>
             </div>
 
             <div>
-              <label>Password : </label>
+              <label htmlFor="password">Password:</label>
               <div className="bg-slate-100 p-2 flex">
                 <input
+                  id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="enter password"
+                  placeholder="Enter password"
                   value={data.password}
                   name="password"
                   onChange={handleOnChange}
                   className="w-full h-full outline-none bg-transparent"
+                  required
                 />
                 <div
                   className="cursor-pointer text-xl"
-                  onClick={() => setShowPassword((preve) => !preve)}
+                  onClick={() => setShowPassword((prev) => !prev)}
                 >
-                  <span>{showPassword ? <FaEyeSlash /> : <FaEye />}</span>
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </div>
               </div>
               <Link
-                to={"/forgot-password"}
+                to="/forgot-password"
                 className="block w-fit ml-auto hover:underline hover:text-red-600"
               >
-                Forgot password ?
+                Forgot password?
               </Link>
             </div>
 
-            <button className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6">
-              Login
+            <button
+              type="submit"
+              className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 w-full max-w-[150px] rounded-full hover:scale-110 transition-all mx-auto block mt-6"
+              disabled={isLoading}
+            >
+              {isLoading ? "Logging in..." : "Login"}
             </button>
           </form>
 
           <p className="my-5">
-            Dont have account ?{" "}
+            Dont have an account?{" "}
             <Link
-              to={"/sign-up"}
-              className=" text-red-600 hover:text-red-700 hover:underline"
+              to="/sign-up"
+              className="text-red-600 hover:text-red-700 hover:underline"
             >
               Sign up
             </Link>
