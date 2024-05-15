@@ -4,9 +4,11 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import router from "./routes/routes.js";
+import cookieParser from "cookie-parser";
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+app.use(cookieParser());
 dotenv.config();
 
 const PORT = process.env.PORT || 8000;

@@ -31,10 +31,7 @@ const Login = () => {
       const res = await axios.post("/api/login", data);
 
       setUser(res.data);
-      if (user.password !== data.password) {
-        toast.error("password is not correct");
-        return;
-      }
+
       toast.success("user Login successfully");
       navigate("/");
     } catch (error) {
