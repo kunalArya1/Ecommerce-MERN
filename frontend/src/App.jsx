@@ -6,13 +6,19 @@ import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import axios from "axios";
 import Context from "./context";
-
+import { useDispatch } from "react-redux";
+import { setUserDetails } from "./store/userSlice.js";
 const App = () => {
+  const dispatch = useDispatch();
   const fetchUserDetails = async () => {
     const dataResponse = await axios.get("/api/user-details", {
       withCredentials: true,
     });
-    console.log("Datauser", dataResponse);
+    // console.log("Datauser", dataResponse);
+    if (dataResponse.data.success) {
+      dispatch(setUserDetails(dataResponse.data.data));
+      // console.log("redux worked");
+    }
   };
   useEffect(() => {
     // function call

@@ -3,7 +3,10 @@ import shopsy from "../assets/shopsy.png";
 import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
+import { useSelector } from "react-redux";
 const Header = () => {
+  const userData = useSelector((state) => state?.user?.user);
+  console.log("userData", userData);
   return (
     <header className="h-16 shadow-md bg-white">
       <div className="h-full container mx-auto flex items-center px-2 justify-between">
@@ -24,7 +27,11 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-7">
           <div className="text-3xl cursor-pointer">
-            <FaRegCircleUser />
+            {userData ? (
+              <img src={userData.profilePic} width={50} height={20} />
+            ) : (
+              <FaRegCircleUser />
+            )}
           </div>
           {/* <div className="text-2xl">
             <FaShoppingCart />
@@ -39,7 +46,7 @@ const Header = () => {
           </div>
           <Link to="login">
             <button className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700">
-              Login
+              {userData ? "Logout" : "Login"}
             </button>
           </Link>
         </div>
