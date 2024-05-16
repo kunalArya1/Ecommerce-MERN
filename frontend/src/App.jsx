@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import axios from "axios";
 import Context from "./context";
+
 const App = () => {
   const fetchUserDetails = async () => {
     const dataResponse = await axios.get("/api/user-details", {
