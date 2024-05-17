@@ -4,9 +4,23 @@ import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
 import { FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import toast from "react-hot-toast";
 const Header = () => {
   const userData = useSelector((state) => state?.user?.user);
-  console.log("userData", userData);
+  // console.log("userData", userData);
+
+  const handleLogout = async () => {
+    const fetchData = await axios.get("/api/logout");
+    console.log(fetchData);
+    if (fetchData.success) {
+      toast.success(fetchData.message);
+    }
+    if (fetchData.error) {
+      toast.error(fetchData.message);
+    }
+    console.log(fetchData);
+  };
   return (
     <header className="h-16 shadow-md bg-white">
       <div className="h-full container mx-auto flex items-center px-2 justify-between">
@@ -28,14 +42,17 @@ const Header = () => {
         <div className="flex items-center gap-7">
           <div className="text-3xl cursor-pointer">
             {userData ? (
-              <img src={userData.profilePic} width={50} height={20} />
+              <img
+                src={userData.profilePic}
+                width={50}
+                height={20}
+                alt={userData?.name}
+              />
             ) : (
               <FaRegCircleUser />
             )}
           </div>
-          {/* <div className="text-2xl">
-            <FaShoppingCart />
-          </div> */}
+
           <div className="col-span-2 sm:col-span-1 text-center">
             <Link to="/cart" className="relative inline-block">
               <span className="font-bold absolute top-0 right-0 -mt-2 -mr-2 px-2 py-1 rounded-full bg-red-500 text-white">
@@ -44,11 +61,20 @@ const Header = () => {
               <FaShoppingCart className="w-10 h-10 cursor-pointer" />
             </Link>
           </div>
-          <Link to="login">
-            <button className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700">
-              {userData ? "Logout" : "Login"}
+          {userData ? (
+            <button
+              className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700"
+              onClick={handleLogout}
+            >
+              Logout
             </button>
-          </Link>
+          ) : (
+            <Link to="login">
+              <button className="px-3 py-1 rounded-full text-white bg-red-600 hover:bg-red-700">
+                Login
+              </button>
+            </Link>
+          )}
         </div>
       </div>
     </header>
