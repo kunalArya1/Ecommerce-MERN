@@ -6,20 +6,28 @@ import { FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { setUserDetails } from "../store/userSlice";
+import { useState } from "react";
 const Header = () => {
   const userData = useSelector((state) => state?.user?.user);
+  const dispatch = useDispatch();
+  const [menuDisplay, setMenuDisplay] = useState(false);
   // console.log("userData", userData);
 
   const handleLogout = async () => {
     const fetchData = await axios.get("/api/logout");
+
     console.log(fetchData);
-    if (fetchData.success) {
-      toast.success(fetchData.message);
+    console.log("logout get called");
+    if (fetchData.data.success) {
+      toast.success(fetchData.data.message, { position: "top-right" });
+      dispatch(setUserDetails(null));
     }
     if (fetchData.error) {
       toast.error(fetchData.message);
     }
-    console.log(fetchData);
+    // console.log(fetchData);
   };
   return (
     <header className="h-16 shadow-md bg-white">
@@ -40,19 +48,35 @@ const Header = () => {
           </div>
         </div>
         <div className="flex items-center gap-7">
-          <div className="text-3xl cursor-pointer">
-            {userData ? (
-              <img
-                src={userData.profilePic}
-                width={50}
-                height={20}
-                alt={userData?.name}
-              />
-            ) : (
-              <FaRegCircleUser />
+          <div className="relative flex justify-center">
+            <div
+              className="text-3xl cursor-pointer relative flex justify-center"
+              onClick={() => setMenuDisplay((preve) => !preve)}
+            >
+              {userData ? (
+                <img
+                  src={userData?.profilePic}
+                  width={50}
+                  height={20}
+                  alt={userData?.name}
+                />
+              ) : (
+                <FaRegCircleUser />
+              )}
+            </div>
+            {menuDisplay && (
+              <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded">
+                <nav>
+                  <Link
+                    to={"admin-panel"}
+                    className="whitespace-nowrap hover:bg-slate-100 p-2 "
+                  >
+                    Admin Panel
+                  </Link>
+                </nav>
+              </div>
             )}
           </div>
-
           <div className="col-span-2 sm:col-span-1 text-center">
             <Link to="/cart" className="relative inline-block">
               <span className="font-bold absolute top-0 right-0 -mt-2 -mr-2 px-2 py-1 rounded-full bg-red-500 text-white">

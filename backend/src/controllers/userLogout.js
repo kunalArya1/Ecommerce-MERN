@@ -2,7 +2,7 @@ export const userLogout = (req, res) => {
   try {
     res.clearCookie("token");
     return res.status(200).json({
-      message: "Logged out successfully",
+      message: "user Logged out successfully",
       error: false,
       success: true,
       data: [],
