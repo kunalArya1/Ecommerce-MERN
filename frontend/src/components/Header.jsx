@@ -30,7 +30,7 @@ const Header = () => {
     // console.log(fetchData);
   };
   return (
-    <header className="h-16 shadow-md bg-white">
+    <header className="h-16 shadow-md bg-white fixed w-full z-40">
       <div className="h-full container mx-auto flex items-center px-2 justify-between">
         <div className="cursor-pointer">
           <Link to={"/"}>
@@ -50,7 +50,7 @@ const Header = () => {
         <div className="flex items-center gap-7">
           <div className="relative flex justify-center">
             <div
-              className="text-3xl cursor-pointer relative flex justify-center"
+              className="text-4xl cursor-pointer relative flex justify-center"
               onClick={() => setMenuDisplay((preve) => !preve)}
             >
               {userData ? (
