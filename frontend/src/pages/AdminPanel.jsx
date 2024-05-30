@@ -30,6 +30,7 @@ const AdminPanel = () => {
             <Link to={"products"} className="px-2 py-1 hover:bg-slate-100">
               products
             </Link>
+            {/* hello nirbhay */}
           </nav>
         </div>
       </aside>
