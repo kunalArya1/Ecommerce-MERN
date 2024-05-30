@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { FaRegCircleUser } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 const AdminPanel = () => {
   const user = useSelector((state) => state?.user?.user);
   return (
@@ -34,7 +34,9 @@ const AdminPanel = () => {
           </nav>
         </div>
       </aside>
-      <main>main</main>
+      <main className="w-full h-full p-2">
+        <Outlet />
+      </main>
     </div>
   );
 };
