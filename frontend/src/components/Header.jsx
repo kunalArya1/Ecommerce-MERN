@@ -56,9 +56,8 @@ const Header = () => {
               {userData ? (
                 <img
                   src={userData?.profilePic}
-                  width={50}
-                  height={20}
                   alt={userData?.name}
+                  className="w-14 h-14 rounded-full"
                 />
               ) : (
                 <FaRegCircleUser />
@@ -70,6 +69,7 @@ const Header = () => {
                   <Link
                     to={"admin-panel"}
                     className="whitespace-nowrap hover:bg-slate-100 p-2 "
+                    onClick={() => setMenuDisplay((preve) => !preve)}
                   >
                     Admin Panel
                   </Link>
