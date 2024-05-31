@@ -63,10 +63,10 @@ const SignUp = () => {
       const res = await axios.post("/api/sign-up", formData);
       toast.success("User signed up successfully", { position: "top-right" });
       setUser(initialUserState);
-      console.log(res);
+      // console.log(res);
       // setUserData(res.data);
       navigate("/login");
-      console.log(user);
+      // console.log(user);
     } catch (error) {
       if (error.response) {
         if (error.response.status === 409) {

@@ -5,6 +5,7 @@ import { userSignInController } from "../controllers/userSignIn.js";
 import { userDetail } from "../controllers/userDetail.js";
 import { authToken } from "../middleware/authToken.js";
 import { userLogout } from "../controllers/userLogout.js";
+import { allUser } from "../controllers/allUser.js";
 // import { home } from "../controllers/index.js";
 
 const router = express.Router();
@@ -13,4 +14,5 @@ router.post("/sign-up", upload.single("profilePic"), userSignUpController);
 router.post("/login", userSignInController);
 router.get("/user-details", authToken, userDetail);
 router.get("/logout", userLogout);
+router.get("/allusers", allUser);
 export default router;

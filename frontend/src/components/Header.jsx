@@ -9,9 +9,11 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/userSlice";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 const Header = () => {
   const userData = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [menuDisplay, setMenuDisplay] = useState(false);
   // console.log("userData", userData);
 
@@ -19,10 +21,11 @@ const Header = () => {
     const fetchData = await axios.get("/api/logout");
 
     console.log(fetchData);
-    console.log("logout get called");
+    // console.log("logout get called");
     if (fetchData.data.success) {
       toast.success(fetchData.data.message, { position: "top-right" });
       dispatch(setUserDetails(null));
+      navigate("/");
     }
     if (fetchData.error) {
       toast.error(fetchData.message);
