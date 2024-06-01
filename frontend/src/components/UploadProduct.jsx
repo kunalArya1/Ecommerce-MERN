@@ -1,28 +1,79 @@
 import { useState } from "react";
 import { CgClose } from "react-icons/cg";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 const UploadProduct = ({ onClose }) => {
-  const [formData, setFormData] = useState({
+  const initialUserState = {
     brandName: "",
     category: "",
-    productImage: null,
+    productImageFile: null,
     description: "",
     price: "",
     sellingPrice: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === "file" ? files[0] : value,
-    }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const [product, setProduct] = useState(initialUserState);
 
-    console.log(formData);
+  const handleChange = (e) => {
+    const { name, value, files } = e.target;
+    if (name === "productImage" && files.length > 0) {
+      const file = files[0];
+      setProduct((prevUser) => ({
+        ...prevUser,
+        productImageFile: file,
+      }));
+    } else {
+      setProduct((prevUser) => ({
+        ...prevUser,
+        [name]: value,
+      }));
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      !product.brandName ||
+      !product.category ||
+      !product.description ||
+      !product.price ||
+      !product.sellingPrice
+    ) {
+      toast.error("All fields are required", { position: "top-right" });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("brandName", product.brandName);
+    formData.append("category", product.category);
+    formData.append("productImage", product.productImageFile);
+    formData.append("description", product.description);
+    formData.append("price", product.price);
+    formData.append("sellingPrice", product.sellingPrice);
+
+    try {
+      const response = await axios.post("/api/add-product", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      if (response.status === 201) {
+        toast.success("Product uploaded successfully", {
+          position: "top-right",
+        });
+        setProduct(initialUserState);
+        onClose();
+      } else {
+        toast.error("Failed to upload product", { position: "top-right" });
+      }
+    } catch (error) {
+      console.error("Error uploading product:", error);
+      toast.error("An error occurred while uploading the product", {
+        position: "top-right",
+      });
+    }
   };
 
   return (
@@ -45,7 +96,7 @@ const UploadProduct = ({ onClose }) => {
             <input
               type="text"
               name="brandName"
-              value={formData.brandName}
+              value={product.brandName}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter brand name"
@@ -58,7 +109,7 @@ const UploadProduct = ({ onClose }) => {
             <input
               type="text"
               name="category"
-              value={formData.category}
+              value={product.category}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter category"
@@ -81,7 +132,7 @@ const UploadProduct = ({ onClose }) => {
             </label>
             <textarea
               name="description"
-              value={formData.description}
+              value={product.description}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter product description"
@@ -94,7 +145,7 @@ const UploadProduct = ({ onClose }) => {
             <input
               type="number"
               name="price"
-              value={formData.price}
+              value={product.price}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter price"
@@ -107,7 +158,7 @@ const UploadProduct = ({ onClose }) => {
             <input
               type="number"
               name="sellingPrice"
-              value={formData.sellingPrice}
+              value={product.sellingPrice}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter selling price"
