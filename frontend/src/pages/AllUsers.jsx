@@ -1,14 +1,31 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 const AllUsers = () => {
   const [allUser, setAllUser] = useState([]);
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [selectedRole, setSelectedRole] = useState("");
 
   const getAllUser = async () => {
     try {
       const res = await axios.get("/api/allusers/");
       setAllUser(res.data);
-      console.log(res.data); // Logging the fetched data instead of the state
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editHandler = (userId, currentRole) => {
+    setEditingUserId(userId);
+    setSelectedRole(currentRole);
+  };
+
+  const saveHandler = async (userId) => {
+    try {
+      await axios.put(`/api/users/${userId}`, { role: selectedRole });
+      setEditingUserId(null);
+      await getAllUser();
     } catch (error) {
       console.log(error);
     }
@@ -20,16 +37,16 @@ const AllUsers = () => {
 
   return (
     <div className="container mx-auto p-4">
-      {/* <h1 className="text-2xl font-bold mb-4">All Users</h1> */}
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <table className="min-w-full bg-white">
+        <table className="min-w-full bg-white table-fixed">
           <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
             <tr>
-              <th className="py-3 px-6 text-left">Sr.</th>
-              <th className="py-3 px-6 text-left">Username</th>
-              <th className="py-3 px-6 text-left">Email</th>
-              <th className="py-3 px-6 text-left">Role</th>
-              <th className="py-3 px-6 text-left">Created Date</th>
+              <th className="py-3 px-6 text-left w-12">Sr.</th>
+              <th className="py-3 px-6 text-left w-32">Username</th>
+              <th className="py-3 px-6 text-left w-48">Email</th>
+              <th className="py-3 px-6 text-left w-24">Role</th>
+              <th className="py-3 px-6 text-left w-40">Created Date</th>
+              <th className="py-3 px-6 text-left w-20">Action</th>
             </tr>
           </thead>
           <tbody className="text-gray-600 text-sm font-light">
@@ -39,11 +56,41 @@ const AllUsers = () => {
                 className="border-b border-gray-200 hover:bg-gray-100"
               >
                 <td className="py-3 px-6 text-left">{index + 1}</td>
-                <td className="py-3 px-6 text-left">{user.name}</td>
-                <td className="py-3 px-6 text-left">{user.email}</td>
-                <td className="py-3 px-6 text-left">{user.role}</td>
+                <td className="py-3 px-6 text-left">{user?.name}</td>
+                <td className="py-3 px-6 text-left">{user?.email}</td>
                 <td className="py-3 px-6 text-left">
-                  {new Date(user.createdAt).toLocaleDateString()}
+                  {editingUserId === user._id ? (
+                    <select
+                      value={selectedRole}
+                      onChange={(e) => setSelectedRole(e.target.value)}
+                      className="bg-gray-200 border border-gray-300 p-2 rounded w-full"
+                    >
+                      <option value="GENERAL">GENERAL</option>
+                      <option value="ADMIN">ADMIN</option>
+                    </select>
+                  ) : (
+                    user?.role
+                  )}
+                </td>
+                <td className="py-3 px-6 text-left">
+                  {moment(user?.createdAt).format("LL")}
+                </td>
+                <td className="py-3 px-6 text-left">
+                  {editingUserId === user._id ? (
+                    <button
+                      className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 uppercase w-full"
+                      onClick={() => saveHandler(user._id)}
+                    >
+                      Save
+                    </button>
+                  ) : (
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700 uppercase w-full"
+                      onClick={() => editHandler(user._id, user.role)}
+                    >
+                      Edit
+                    </button>
+                  )}
                 </td>
               </tr>
             ))}

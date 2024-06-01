@@ -6,6 +6,7 @@ import { userDetail } from "../controllers/userDetail.js";
 import { authToken } from "../middleware/authToken.js";
 import { userLogout } from "../controllers/userLogout.js";
 import { allUser } from "../controllers/allUser.js";
+import { editRole } from "../controllers/editRole.js";
 // import { home } from "../controllers/index.js";
 
 const router = express.Router();
@@ -15,4 +16,5 @@ router.post("/login", userSignInController);
 router.get("/user-details", authToken, userDetail);
 router.get("/logout", userLogout);
 router.get("/allusers", allUser);
+router.put("/users/:id", editRole);
 export default router;
