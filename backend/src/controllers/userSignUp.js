@@ -17,10 +17,10 @@ export const userSignUpController = async (req, res) => {
       throw new Error("Please provide name, email, and password");
     }
 
-    if (!req.file) {
-      throw new Error("Profile picture is required");
-    }
-    const fileUrl = await uploadOnCloudinary(req.file.path);
+    // if (!req.file) {
+    //   throw new Error("Profile picture is required");
+    // }
+    const fileUrl = await uploadOnCloudinary(req?.file?.path);
     const hashedPassword = bcryptjs.hashSync(password, 10);
     console.log(fileUrl);
     const newUser = new userModel({

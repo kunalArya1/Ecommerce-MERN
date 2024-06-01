@@ -8,7 +8,7 @@ const AdminPanel = () => {
       <aside className="bg-white min-h-full  w-full  max-w-60 customShadow">
         <div className="h-32  flex justify-center items-center flex-col">
           <div className="text-5xl cursor-pointer relative flex justify-center">
-            {user ? (
+            {user?.profilePic ? (
               <img
                 src={user?.profilePic}
                 alt={user?.name}

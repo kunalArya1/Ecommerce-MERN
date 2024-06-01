@@ -52,20 +52,22 @@ const Header = () => {
         </div>
         <div className="flex items-center gap-7">
           <div className="relative flex justify-center">
-            <div
-              className="text-4xl cursor-pointer relative flex justify-center"
-              onClick={() => setMenuDisplay((preve) => !preve)}
-            >
-              {userData ? (
-                <img
-                  src={userData?.profilePic}
-                  alt={userData?.name}
-                  className="w-14 h-14 rounded-full"
-                />
-              ) : (
-                <FaRegCircleUser />
-              )}
-            </div>
+            {userData?._id && (
+              <div
+                className="text-4xl cursor-pointer relative flex justify-center"
+                onClick={() => setMenuDisplay((preve) => !preve)}
+              >
+                {userData?.profilePic ? (
+                  <img
+                    src={userData?.profilePic}
+                    alt={userData?.name}
+                    className="w-14 h-14 rounded-full"
+                  />
+                ) : (
+                  <FaRegCircleUser />
+                )}
+              </div>
+            )}
             {menuDisplay && (
               <div className="absolute bg-white bottom-0 top-11 h-fit p-2 shadow-lg rounded">
                 <nav>
