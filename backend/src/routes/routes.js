@@ -19,6 +19,6 @@ router.get("/user-details", authToken, userDetail);
 router.get("/logout", userLogout);
 router.get("/allusers", allUser);
 router.put("/users/:id", editRole);
-router.post("/add-product", upload.single("productImage"), addProduct);
+router.post("/add-product", addProduct);
 router.get("/products", allProduct);
 export default router;

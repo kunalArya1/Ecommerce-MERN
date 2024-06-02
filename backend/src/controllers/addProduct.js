@@ -1,13 +1,20 @@
 import { productModel } from "../models/productModel.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 export const addProduct = async (req, res) => {
   try {
-    const { brandName, category, description, price, sellingPrice } = req.body;
-    if (!brandName || !category || !description || !price || !sellingPrice) {
-      throw new Error("Please Provide all the details");
+    const { brandName, category, description, price, sellingPrice, images } =
+      req.body;
+    if (
+      !brandName ||
+      !category ||
+      !description ||
+      !price ||
+      !sellingPrice ||
+      !images ||
+      images.length === 0
+    ) {
+      throw new Error("Please Provide all the details and at least one image");
     }
-    const fileUrl = await uploadOnCloudinary(req?.file?.path);
 
     const newProduct = new productModel({
       brandName,
@@ -15,7 +22,7 @@ export const addProduct = async (req, res) => {
       description,
       price,
       sellingPrice,
-      productImage: fileUrl,
+      images, // This should be an array of image URLs
     });
     await newProduct.save();
     console.log(newProduct);

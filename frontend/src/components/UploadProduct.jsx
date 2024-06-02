@@ -2,38 +2,68 @@ import { useState } from "react";
 import { CgClose } from "react-icons/cg";
 import toast from "react-hot-toast";
 import axios from "axios";
+import productCategory from "../helper/productCategory";
 
-const UploadProduct = ({ onClose }) => {
+const UploadProduct = ({ onClose, onProductUploaded }) => {
   const initialUserState = {
+    productName: "",
     brandName: "",
     category: "",
-    productImageFile: null,
     description: "",
     price: "",
     sellingPrice: "",
+    images: [],
   };
 
   const [product, setProduct] = useState(initialUserState);
+  const [previewUrls, setPreviewUrls] = useState([]);
+  const [uploading, setUploading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === "productImage" && files.length > 0) {
-      const file = files[0];
-      setProduct((prevUser) => ({
-        ...prevUser,
-        productImageFile: file,
+    if (name === "images" && files.length > 0) {
+      const fileArray = Array.from(files);
+      setProduct((prevProduct) => ({
+        ...prevProduct,
+        images: [...prevProduct.images, ...fileArray],
       }));
+
+      const previews = fileArray.map((file) => URL.createObjectURL(file));
+      setPreviewUrls((prevPreviews) => [...prevPreviews, ...previews]);
     } else {
-      setProduct((prevUser) => ({
-        ...prevUser,
+      setProduct((prevProduct) => ({
+        ...prevProduct,
         [name]: value,
       }));
+    }
+  };
+
+  const handleImageUpload = async (image) => {
+    const cloudinaryUploadPreset = "mern_product";
+
+    try {
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", cloudinaryUploadPreset);
+
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dnwgwq672/image/upload",
+        formData
+      );
+      return res.data.secure_url;
+    } catch (error) {
+      console.error(
+        "Image Upload Error:",
+        error.response?.data || error.message
+      );
+      return null;
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
+      !product.productName ||
       !product.brandName ||
       !product.category ||
       !product.description ||
@@ -44,18 +74,24 @@ const UploadProduct = ({ onClose }) => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("brandName", product.brandName);
-    formData.append("category", product.category);
-    formData.append("productImage", product.productImageFile);
-    formData.append("description", product.description);
-    formData.append("price", product.price);
-    formData.append("sellingPrice", product.sellingPrice);
+    setUploading(true);
+    const imageUrls = [];
+    for (const image of product.images) {
+      const url = await handleImageUpload(image);
+      if (url) {
+        imageUrls.push(url);
+      }
+    }
+
+    const productData = {
+      ...product,
+      images: imageUrls,
+    };
 
     try {
-      const response = await axios.post("/api/add-product", formData, {
+      const response = await axios.post("/api/add-product", productData, {
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       });
 
@@ -64,7 +100,9 @@ const UploadProduct = ({ onClose }) => {
           position: "top-right",
         });
         setProduct(initialUserState);
+        setPreviewUrls([]);
         onClose();
+        onProductUploaded(); // Call the handler to refresh the product list
       } else {
         toast.error("Failed to upload product", { position: "top-right" });
       }
@@ -73,6 +111,8 @@ const UploadProduct = ({ onClose }) => {
       toast.error("An error occurred while uploading the product", {
         position: "top-right",
       });
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -91,6 +131,19 @@ const UploadProduct = ({ onClose }) => {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700">
+              Product Name
+            </label>
+            <input
+              type="text"
+              name="productName"
+              value={product.productName}
+              onChange={handleChange}
+              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              placeholder="Enter product name"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
               Brand Name
             </label>
             <input
@@ -106,25 +159,41 @@ const UploadProduct = ({ onClose }) => {
             <label className="block text-sm font-medium text-gray-700">
               Category
             </label>
-            <input
-              type="text"
+            <select
               name="category"
               value={product.category}
               onChange={handleChange}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter category"
-            />
+            >
+              <option value="">Select Category</option>
+              {productCategory.map((item) => (
+                <option key={item.value} value={item.value}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Product Image
+              Product Images
             </label>
             <input
               type="file"
-              name="productImage"
+              name="images"
               onChange={handleChange}
+              multiple
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
+            <div className="mt-2 flex flex-wrap gap-2">
+              {previewUrls.map((url, index) => (
+                <img
+                  key={index}
+                  src={url}
+                  alt={`Preview ${index}`}
+                  className="w-24 h-24 object-cover rounded"
+                />
+              ))}
+            </div>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -167,9 +236,12 @@ const UploadProduct = ({ onClose }) => {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className={`px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+                uploading ? "cursor-not-allowed" : ""
+              }`}
+              disabled={uploading}
             >
-              Upload
+              {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
         </form>
