@@ -9,6 +9,7 @@ import { allUser } from "../controllers/allUser.js";
 import { editRole } from "../controllers/editRole.js";
 import { addProduct } from "../controllers/addProduct.js";
 import { allProduct } from "../controllers/allProduct.js";
+import { checkAdmin } from "../middleware/checkAdmin.js";
 // import { home } from "../controllers/index.js";
 
 const router = express.Router();
@@ -19,6 +20,6 @@ router.get("/user-details", authToken, userDetail);
 router.get("/logout", userLogout);
 router.get("/allusers", allUser);
 router.put("/users/:id", editRole);
-router.post("/add-product", addProduct);
+router.post("/add-product", authToken, checkAdmin, addProduct);
 router.get("/products", allProduct);
 export default router;

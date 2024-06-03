@@ -1,5 +1,4 @@
 // components/ProductList.jsx
-import React from "react";
 
 const ProductList = ({ products }) => {
   return (

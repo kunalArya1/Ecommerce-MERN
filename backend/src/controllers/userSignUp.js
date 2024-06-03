@@ -22,7 +22,7 @@ export const userSignUpController = async (req, res) => {
     // }
     const fileUrl = await uploadOnCloudinary(req?.file?.path);
     const hashedPassword = bcryptjs.hashSync(password, 10);
-    console.log(fileUrl);
+    // console.log(fileUrl);
     const newUser = new userModel({
       name,
       email,
@@ -31,7 +31,7 @@ export const userSignUpController = async (req, res) => {
       role: "GENERAL",
     });
     await newUser.save();
-    console.log(newUser);
+    // console.log(newUser);
     return res.status(201).json({
       data: newUser,
       success: true,

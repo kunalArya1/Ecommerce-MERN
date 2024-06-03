@@ -108,7 +108,11 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
       }
     } catch (error) {
       console.error("Error uploading product:", error);
-      toast.error("An error occurred while uploading the product", {
+      // Extract the error message from the response
+      const errorMessage =
+        error.response?.data?.message || "Failed to upload product";
+
+      toast.error(errorMessage, {
         position: "top-right",
       });
     } finally {
@@ -117,18 +121,18 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
   };
 
   return (
-    <div className="fixed w-full bg-slate-200 bg-opacity-35 top-0 left-0 right-0 bottom-0 flex justify-center items-center">
-      <div className="bg-white p-4 rounded w-full max-w-2xl h-full max-h-[80%] overflow-auto">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg w-full max-w-2xl h-full max-h-[80%] overflow-auto shadow-xl transform transition-transform duration-200 scale-95 sm:scale-100">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="font-bold text-lg">Upload Product</h2>
+          <h2 className="font-bold text-2xl text-gray-800">Upload Product</h2>
           <div
-            className="w-fit ml-auto text-2xl hover:text-red-600 cursor-pointer"
+            className="text-2xl text-gray-600 hover:text-red-600 cursor-pointer"
             onClick={onClose}
           >
             <CgClose />
           </div>
         </div>
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Product Name
@@ -138,7 +142,7 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
               name="productName"
               value={product.productName}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter product name"
             />
           </div>
@@ -151,7 +155,7 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
               name="brandName"
               value={product.brandName}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter brand name"
             />
           </div>
@@ -163,7 +167,7 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
               name="category"
               value={product.category}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
               <option value="">Select Category</option>
               {productCategory.map((item) => (
@@ -182,7 +186,7 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
               name="images"
               onChange={handleChange}
               multiple
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             />
             <div className="mt-2 flex flex-wrap gap-2">
               {previewUrls.map((url, index) => (
@@ -203,40 +207,42 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
               name="description"
               value={product.description}
               onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="Enter product description"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Price
-            </label>
-            <input
-              type="number"
-              name="price"
-              value={product.price}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter price"
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Selling Price
-            </label>
-            <input
-              type="number"
-              name="sellingPrice"
-              value={product.sellingPrice}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              placeholder="Enter selling price"
-            />
+          <div className="flex gap-4">
+            <div className="w-1/2">
+              <label className="block text-sm font-medium text-gray-700">
+                Price
+              </label>
+              <input
+                type="number"
+                name="price"
+                value={product.price}
+                onChange={handleChange}
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Enter price"
+              />
+            </div>
+            <div className="w-1/2">
+              <label className="block text-sm font-medium text-gray-700">
+                Selling Price
+              </label>
+              <input
+                type="number"
+                name="sellingPrice"
+                value={product.sellingPrice}
+                onChange={handleChange}
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                placeholder="Enter selling price"
+              />
+            </div>
           </div>
           <div className="flex justify-end">
             <button
               type="submit"
-              className={`px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
+              className={`px-6 py-3 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 ${
                 uploading ? "cursor-not-allowed" : ""
               }`}
               disabled={uploading}

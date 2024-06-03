@@ -25,7 +25,7 @@ export const addProduct = async (req, res) => {
       images, // This should be an array of image URLs
     });
     await newProduct.save();
-    console.log(newProduct);
+    // console.log(newProduct);
     return res.status(201).json({
       data: newProduct,
       success: true,

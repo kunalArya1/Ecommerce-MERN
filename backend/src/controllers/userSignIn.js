@@ -32,7 +32,7 @@ export const userSignInController = async (req, res) => {
       });
     }
 
-    const tokenData = { userId: user._id, email: user.email };
+    const tokenData = { userId: user._id, email: user.email, role: user.role };
     const token = jwt.sign(tokenData, process.env.ACCESS_TOKEN_SECRET, {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     });
