@@ -118,6 +118,7 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
     } finally {
       setUploading(false);
     }
+    console.log(product);
   };
 
   return (

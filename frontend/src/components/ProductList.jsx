@@ -1,8 +1,8 @@
 import { useState } from "react";
-
 import { HiPencil } from "react-icons/hi2";
-import PropTypes from "prop-types"; // Import PropTypes
-// import EditProducts from "./EditProducts";
+import PropTypes from "prop-types";
+import EditProducts from "./EditProducts";
+
 const ProductList = ({ products, onProductUploaded }) => {
   const [editingProduct, setEditingProduct] = useState(null);
 
@@ -50,20 +50,19 @@ const ProductList = ({ products, onProductUploaded }) => {
         <p className="text-center text-gray-500">No products available</p>
       )}
       {editingProduct && (
-        // <UploadProduct
-        //   onClose={() => setEditingProduct(null)}
-        //   onProductUploaded={onProductUploaded}
-        //   productToEdit={editingProduct}
-        // />
-        // <EditProducts />
-        <h1>hii</h1>
+        <EditProducts
+          product={editingProduct}
+          onClose={() => setEditingProduct(null)}
+          onProductUploaded={onProductUploaded}
+        />
       )}
     </div>
   );
 };
 
 ProductList.propTypes = {
-  products: PropTypes.func.isRequired,
+  products: PropTypes.array.isRequired,
   onProductUploaded: PropTypes.func.isRequired,
 };
+
 export default ProductList;

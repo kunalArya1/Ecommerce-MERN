@@ -2,9 +2,17 @@ import { productModel } from "../models/productModel.js";
 
 export const addProduct = async (req, res) => {
   try {
-    const { brandName, category, description, price, sellingPrice, images } =
-      req.body;
+    const {
+      productName,
+      brandName,
+      category,
+      description,
+      price,
+      sellingPrice,
+      images,
+    } = req.body;
     if (
+      !productName ||
       !brandName ||
       !category ||
       !description ||
@@ -17,6 +25,7 @@ export const addProduct = async (req, res) => {
     }
 
     const newProduct = new productModel({
+      productName,
       brandName,
       category,
       description,

@@ -10,7 +10,8 @@ import { editRole } from "../controllers/editRole.js";
 import { addProduct } from "../controllers/addProduct.js";
 import { allProduct } from "../controllers/allProduct.js";
 import { checkAdmin } from "../middleware/checkAdmin.js";
-import { getProductById } from "../controllers/getSingleProduct.js";
+import { updateProduct } from "../controllers/updateProduct.js";
+
 // import { home } from "../controllers/index.js";
 
 const router = express.Router();
@@ -23,5 +24,5 @@ router.get("/allusers", allUser);
 router.put("/users/:id", editRole);
 router.post("/add-product", authToken, checkAdmin, addProduct);
 router.get("/products", allProduct);
-router.get("/editProduct/:id", getProductById);
+router.put("/products/:id", authToken, checkAdmin, updateProduct);
 export default router;
