@@ -1,6 +1,6 @@
-import { userModel } from "../models/userModel.js";
+import { userModel } from "../../models/userModel.js";
 import bcryptjs from "bcryptjs";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import { uploadOnCloudinary } from "../../utils/cloudinary.js";
 export const userSignUpController = async (req, res) => {
   try {
     const { name, email, password } = req.body;

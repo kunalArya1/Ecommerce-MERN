@@ -97,6 +97,7 @@ const EditProducts = ({ product, onClose, onProductUploaded }) => {
         productData
       );
       console.log(response.data);
+      toast.success(response?.data?.message, { position: "top-right" });
       onProductUploaded();
       onClose();
       console.log("get called");

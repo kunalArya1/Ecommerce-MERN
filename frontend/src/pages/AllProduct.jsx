@@ -42,6 +42,7 @@ const AllProduct = () => {
           onProductUploaded={handleProductUploaded} // Pass the handler
         />
       )}
+
       <ProductList
         products={products}
         onProductUploaded={handleProductUploaded}

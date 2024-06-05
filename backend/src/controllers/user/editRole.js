@@ -1,4 +1,4 @@
-import { userModel } from "../models/userModel.js";
+import { userModel } from "../../models/userModel.js";
 
 export const editRole = async (req, res) => {
   const { id } = req.params;
