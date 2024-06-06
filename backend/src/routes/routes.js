@@ -12,6 +12,7 @@ import { allProduct } from "../controllers/Product/allProduct.js";
 import { checkAdmin } from "../middleware/checkAdmin.js";
 import { updateProduct } from "../controllers/Product/updateProduct.js";
 import { getCategoryProduct } from "../controllers/Product/getProductCategory.js";
+import { getCategoryWiseProduct } from "../controllers/Product/getCategoryWiseProduct.js";
 
 const router = express.Router();
 
@@ -29,4 +30,5 @@ router.post("/add-product", authToken, checkAdmin, addProduct);
 router.get("/products", allProduct);
 router.put("/products/:id", authToken, checkAdmin, updateProduct);
 router.get("/get-categoryProduct", getCategoryProduct);
+router.get("/product-category/:categoryName", getCategoryWiseProduct);
 export default router;
