@@ -24,7 +24,7 @@ const ProductList = ({ products, onProductUploaded }) => {
                   <img
                     src={product.images[0]}
                     alt={product.name}
-                    className="object-contain h-full"
+                    className="object-contain h-full mix-blend-multiply"
                   />
                 </div>
                 <div className="p-4 flex-grow">
