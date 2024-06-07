@@ -4,7 +4,12 @@ export const getCategoryWiseProduct = async (req, res) => {
     const { categoryName } = req.params;
     const product = await productModel.find({ category: categoryName });
     // console.log(product);
-    return res.status(200).json(product);
+    return res.status(200).json({
+      data: product,
+      message: "Product",
+      success: true,
+      error: false,
+    });
   } catch (error) {
     res.status(400).json({
       message: error.message || error,
