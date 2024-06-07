@@ -3,57 +3,80 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 const CategoryProduct = () => {
   const { categoryName } = useParams();
-  const [product, setProduct] = useState([]);
+  const [products, setProduct] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const loadingList = new Array(13).fill(null);
   const getProduct = async () => {
     const res = await axios.get(`/api/product-category/${categoryName}`);
     // console.log(res);
     setProduct(res?.data?.data);
+    setLoading(false);
   };
 
   useEffect(() => {
     getProduct();
   }, []);
-  console.log(product);
+  console.log(products);
   return (
-    <div className="py-8 px-6 mx-9 bg-gray-100 min-h-screen">
-      {product.length > 0 ? (
-        <div className="h-full">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 h-full overflow-auto">
-            {product.map((product) => (
-              <div
-                key={product.id}
-                className="border rounded-lg shadow-lg bg-white overflow-hidden w-full flex flex-col"
-              >
-                <div className="flex justify-center items-center h-48 bg-gray-200">
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="object-contain h-full mix-blend-multiply"
-                  />
-                </div>
-                <div className="p-4 flex-grow">
-                  <h3 className="font-bold text-lg text-gray-900 text-ellipsis line-clamp-2">
-                    {product.productName}
-                  </h3>
-                  <div className="flex justify-between items-center mb-4">
-                    <p className="text-green-600 font-semibold">
-                      ₹{product.sellingPrice}
-                    </p>
-                    <p className="line-through text-gray-400">
-                      ₹{product.price}
-                    </p>
+    <div className="container mx-auto px-4 my-6 relative">
+      <h2 className="text-2xl font-semibold py-4">{products.category}</h2>
+      <div className="flex flex-wrap gap-4">
+        {loading
+          ? loadingList.map((product, index) => {
+              return (
+                <div
+                  className="w-full sm:w-[calc(20%-16px)] bg-white rounded-sm shadow"
+                  key={index}
+                >
+                  <div className="bg-slate-200 h-48 p-4 flex justify-center items-center animate-pulse"></div>
+                  <div className="p-4 grid gap-3">
+                    <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black p-1 py-2 animate-pulse rounded-full bg-slate-200"></h2>
+                    <p className="capitalize text-slate-500 p-1 animate-pulse rounded-full bg-slate-200 py-2"></p>
+                    <div className="flex gap-3">
+                      <p className="text-red-600 font-medium p-1 animate-pulse rounded-full bg-slate-200 w-full py-2"></p>
+                      <p className="text-slate-500 line-through p-1 animate-pulse rounded-full bg-slate-200 w-full py-2"></p>
+                    </div>
+                    <button className="text-sm text-white px-3 rounded-full bg-slate-200 py-2 animate-pulse"></button>
                   </div>
-                  <button className="px-4 py-2 bg-indigo-600 text-white rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 flex justify-center">
-                    ADD TO CART
-                  </button>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <p className="text-center text-gray-500">No products available</p>
-      )}
+              );
+            })
+          : products.map((product, index) => {
+              return (
+                <div
+                  to={"product/" + product?._id}
+                  className="w-full sm:w-[calc(20%-16px)] bg-white rounded-sm shadow"
+                  key={index}
+                >
+                  <div className="bg-slate-200 h-48 p-4 flex justify-center items-center">
+                    <img
+                      src={product.images[0]}
+                      className="object-scale-down h-full hover:scale-110 transition-all mix-blend-multiply"
+                    />
+                  </div>
+                  <div className="p-4 grid gap-3">
+                    <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black">
+                      {product?.productName}
+                    </h2>
+                    <p className="capitalize text-slate-500">
+                      {product?.category}
+                    </p>
+                    <div className="flex gap-3">
+                      <p className="text-red-600 font-medium">
+                        {product?.sellingPrice}
+                      </p>
+                      <p className="text-slate-500 line-through">
+                        {product?.price}
+                      </p>
+                    </div>
+                    <button className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full">
+                      Add to Cart
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+      </div>
     </div>
   );
 };

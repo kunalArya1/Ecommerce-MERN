@@ -1,39 +1,15 @@
 import moment from "moment";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useOutletContext } from "react-router-dom";
 
 const AllUsers = () => {
-  const [allUser, setAllUser] = useState([]);
-  const [editingUserId, setEditingUserId] = useState(null);
-  const [selectedRole, setSelectedRole] = useState("");
-
-  const getAllUser = async () => {
-    try {
-      const res = await axios.get("/api/allusers/");
-      setAllUser(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const editHandler = (userId, currentRole) => {
-    setEditingUserId(userId);
-    setSelectedRole(currentRole);
-  };
-
-  const saveHandler = async (userId) => {
-    try {
-      await axios.put(`/api/users/${userId}`, { role: selectedRole });
-      setEditingUserId(null);
-      await getAllUser();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getAllUser();
-  }, []);
+  const {
+    allUser,
+    editHandler,
+    saveHandler,
+    editingUserId,
+    selectedRole,
+    setSelectedRole,
+  } = useOutletContext();
 
   return (
     <div className="container mx-auto p-4">
