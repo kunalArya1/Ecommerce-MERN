@@ -3,7 +3,7 @@ export const getCategoryWiseProduct = async (req, res) => {
   try {
     const { categoryName } = req.params;
     const product = await productModel.find({ category: categoryName });
-    console.log(product);
+    // console.log(product);
     return res.status(200).json(product);
   } catch (error) {
     res.status(400).json({

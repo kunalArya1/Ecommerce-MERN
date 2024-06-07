@@ -19,6 +19,29 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
   const [previewUrls, setPreviewUrls] = useState([]);
   const [uploading, setUploading] = useState(false);
 
+  const handleImageUpload = async (image) => {
+    const cloudinaryUploadPreset = "mern_product";
+
+    try {
+      const formData = new FormData();
+      formData.append("file", image);
+      formData.append("upload_preset", cloudinaryUploadPreset);
+
+      const res = await axios.post(
+        "https://api.cloudinary.com/v1_1/dnwgwq672/image/upload",
+        formData
+      );
+      console.log(res);
+      return res.data.secure_url;
+    } catch (error) {
+      console.error(
+        "Image Upload Error: occur",
+        error.response?.data || error.message
+      );
+      return null;
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (name === "images" && files.length > 0) {
@@ -35,28 +58,6 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
         ...prevProduct,
         [name]: value,
       }));
-    }
-  };
-
-  const handleImageUpload = async (image) => {
-    const cloudinaryUploadPreset = "mern_product";
-
-    try {
-      const formData = new FormData();
-      formData.append("file", image);
-      formData.append("upload_preset", cloudinaryUploadPreset);
-
-      const res = await axios.post(
-        "https://api.cloudinary.com/v1_1/dnwgwq672/image/upload",
-        formData
-      );
-      return res.data.secure_url;
-    } catch (error) {
-      console.error(
-        "Image Upload Error:",
-        error.response?.data || error.message
-      );
-      return null;
     }
   };
 
@@ -118,11 +119,12 @@ const UploadProduct = ({ onClose, onProductUploaded }) => {
     } finally {
       setUploading(false);
     }
-    console.log(product);
+    // console.log(product);
   };
 
+  // console.log(product);
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
       <div className="bg-white p-6 rounded-lg w-full max-w-2xl h-full max-h-[80%] overflow-auto shadow-xl transform transition-transform duration-200 scale-95 sm:scale-100">
         <div className="flex justify-between items-center mb-4">
           <h2 className="font-bold text-2xl text-gray-800">Upload Product</h2>
