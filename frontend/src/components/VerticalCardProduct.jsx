@@ -4,6 +4,7 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
 import axios from "axios";
+import { addToCart } from "../helper/addToCart";
 const VerticalCardProduct = ({ categoryName, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +15,7 @@ const VerticalCardProduct = ({ categoryName, heading }) => {
 
   const fetchData = async () => {
     setLoading(true);
-    const res = await axios.get(`/api/product-category/${categoryName}`);
+    const res = await axios.get(`/api/category/${categoryName}`);
     setLoading(false);
 
     setData(res?.data?.data);
@@ -94,13 +95,17 @@ const VerticalCardProduct = ({ categoryName, heading }) => {
                     </p>
                     <div className="flex gap-3">
                       <p className="text-red-600 font-medium">
-                        {product?.sellingPrice}
+                        ₹{product?.sellingPrice}
                       </p>
                       <p className="text-slate-500 line-through">
-                        {product?.price}
+                        ₹{product?.price}
                       </p>
                     </div>
-                    <button className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full">
+
+                    <button
+                      className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
+                      onClick={(e) => addToCart(e, product?._id)}
+                    >
                       Add to Cart
                     </button>
                   </div>

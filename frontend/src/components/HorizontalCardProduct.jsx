@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { addToCart } from "../helper/addToCart";
 const HorizontalCardProduct = ({ categoryName, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +15,7 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
 
   const fetchData = async () => {
     setLoading(true);
-    const res = await axios.get(`/api/product-category/${categoryName}`);
+    const res = await axios.get(`/api/category/${categoryName}`);
     setLoading(false);
 
     console.log("horizontal data", res.data);
@@ -103,7 +104,7 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
                     </div>
                     <button
                       className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
-                      onClick={(e) => handleAddToCart(e, product?._id)}
+                      onClick={(e) => addToCart(e, product?._id)}
                     >
                       Add to Cart
                     </button>

@@ -16,7 +16,30 @@ const Home = () => {
         categoryName={"watches"}
         heading={"Popular's Watches"}
       />
-      <VerticalCardProduct categoryName={"mobiles"} heading={"mobiles"} />
+      <VerticalCardProduct categoryName={"mobiles"} heading={"Mobiles"} />
+      <VerticalCardProduct categoryName={"Mouse"} heading={"Mouse"} />
+      <VerticalCardProduct
+        categoryName={"televisions"}
+        heading={"Television"}
+      />
+      <VerticalCardProduct
+        categoryName={"earphones"}
+        heading={"Wired Earphones"}
+      />
+      <VerticalCardProduct categoryName={"processor"} heading={"Processor"} />
+      <VerticalCardProduct
+        categoryName={"refrigerator"}
+        heading={"Refrigerator"}
+      />
+      <VerticalCardProduct categoryName={"trimmers"} heading={"Trimmers"} />
+      <VerticalCardProduct
+        categoryName={"camera"}
+        heading={"Camera & Photography"}
+      />
+      <VerticalCardProduct
+        categoryName={"speakers"}
+        heading={"Bluetooth Speakers"}
+      />
     </div>
   );
 };

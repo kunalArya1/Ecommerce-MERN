@@ -36,7 +36,7 @@ const CategoryList = () => {
             ))
           : categoryProduct.map((product, index) => (
               <Link
-                to={`/product-category/${product?.category}`}
+                to={`/category/${product?.category}`}
                 key={index}
                 className="cursor-pointer"
               >

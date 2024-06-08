@@ -30,5 +30,5 @@ router.post("/add-product", authToken, checkAdmin, addProduct);
 router.get("/products", allProduct);
 router.put("/products/:id", authToken, checkAdmin, updateProduct);
 router.get("/get-categoryProduct", getCategoryProduct);
-router.get("/product-category/:categoryName", getCategoryWiseProduct);
+router.get("/category/:categoryName", getCategoryWiseProduct);
 export default router;
