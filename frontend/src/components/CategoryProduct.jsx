@@ -18,7 +18,7 @@ const CategoryProduct = () => {
   useEffect(() => {
     getProduct();
   }, []);
-  console.log(products);
+  // console.log(products);
   return (
     <div className="container mx-auto px-4 my-6 relative">
       <h2 className="text-2xl font-semibold py-4">{products.category}</h2>

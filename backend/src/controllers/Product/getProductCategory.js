@@ -3,7 +3,7 @@ import { productModel } from "../../models/productModel.js";
 export const getCategoryProduct = async (req, res) => {
   try {
     const productCategory = await productModel.distinct("category");
-    console.log("category", productCategory);
+    // console.log("category", productCategory);
 
     const productByCategory = [];
     for (const category of productCategory) {

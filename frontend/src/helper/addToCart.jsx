@@ -1,4 +1,4 @@
 export const addToCart = (e, id) => {
-  e.stopPropagation();
-  e.preventDefault();
+  e?.stopPropagation();
+  e?.preventDefault();
 };

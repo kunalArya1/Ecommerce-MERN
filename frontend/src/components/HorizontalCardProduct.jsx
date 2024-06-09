@@ -18,7 +18,7 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
     const res = await axios.get(`/api/category/${categoryName}`);
     setLoading(false);
 
-    console.log("horizontal data", res.data);
+    // console.log("horizontal data", res.data);
     setData(res?.data?.data);
   };
 

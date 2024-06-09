@@ -13,6 +13,7 @@ import { checkAdmin } from "../middleware/checkAdmin.js";
 import { updateProduct } from "../controllers/Product/updateProduct.js";
 import { getCategoryProduct } from "../controllers/Product/getProductCategory.js";
 import { getCategoryWiseProduct } from "../controllers/Product/getCategoryWiseProduct.js";
+import { getSingleProductDetail } from "../controllers/Product/getSingleProductDetail.js";
 
 const router = express.Router();
 
@@ -31,4 +32,5 @@ router.get("/products", allProduct);
 router.put("/products/:id", authToken, checkAdmin, updateProduct);
 router.get("/get-categoryProduct", getCategoryProduct);
 router.get("/category/:categoryName", getCategoryWiseProduct);
+router.get("/product/:id", getSingleProductDetail);
 export default router;
