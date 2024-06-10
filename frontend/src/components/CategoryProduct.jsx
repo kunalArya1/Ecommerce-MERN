@@ -2,12 +2,14 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { addToCart } from "../helper/addToCart";
-import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addItem } from "../store/cartSlice";
 const CategoryProduct = () => {
   const { categoryName } = useParams();
   const [products, setProduct] = useState([]);
   const [loading, setLoading] = useState(true);
   const loadingList = new Array(13).fill(null);
+  const dispatch = useDispatch();
   const getProduct = async () => {
     const res = await axios.get(`/api/category/${categoryName}`);
     // console.log(res);
@@ -45,8 +47,7 @@ const CategoryProduct = () => {
             })
           : products.map((product, index) => {
               return (
-                <Link
-                  to={"product/" + product?._id}
+                <div
                   className="w-full sm:w-[calc(20%-16px)] bg-white rounded-sm shadow"
                   key={index}
                 >
@@ -73,12 +74,12 @@ const CategoryProduct = () => {
                     </div>
                     <button
                       className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
-                      onClick={(e) => addToCart(e, product?._id)}
+                      onClick={() => dispatch(addItem(product))}
                     >
                       Add to Cart
                     </button>
                   </div>
-                </Link>
+                </div>
               );
             })}
       </div>

@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-
+import { useDispatch } from "react-redux";
+import { addItem } from "../store/cartSlice";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-
+import PropTypes from "prop-types";
 import axios from "axios";
 import { addToCart } from "../helper/addToCart";
 const VerticalCardProduct = ({ categoryName, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const loadingList = new Array(13).fill(null);
-
-  const [scroll, setScroll] = useState(0);
+  const dispatch = useDispatch();
   const scrollElement = useRef();
-
+  const handleAddItem = async (e, item) => {
+    await addToCart(e, item._id);
+    dispatch(addItem(item));
+    console.log(item);
+  };
   const fetchData = async () => {
     setLoading(true);
     const res = await axios.get(`/api/category/${categoryName}`);
@@ -104,7 +108,7 @@ const VerticalCardProduct = ({ categoryName, heading }) => {
 
                     <button
                       className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
-                      onClick={(e) => addToCart(e, product?._id)}
+                      onClick={(e) => handleAddItem(e, product)}
                     >
                       Add to Cart
                     </button>
@@ -116,5 +120,8 @@ const VerticalCardProduct = ({ categoryName, heading }) => {
     </div>
   );
 };
-
+VerticalCardProduct.propTypes = {
+  categoryName: PropTypes.string.isRequired,
+  heading: PropTypes.string.isRequired,
+};
 export default VerticalCardProduct;

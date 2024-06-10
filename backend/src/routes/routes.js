@@ -14,6 +14,7 @@ import { updateProduct } from "../controllers/Product/updateProduct.js";
 import { getCategoryProduct } from "../controllers/Product/getProductCategory.js";
 import { getCategoryWiseProduct } from "../controllers/Product/getCategoryWiseProduct.js";
 import { getSingleProductDetail } from "../controllers/Product/getSingleProductDetail.js";
+import { addToCart } from "../controllers/user/addToCart.js";
 
 const router = express.Router();
 
@@ -33,4 +34,7 @@ router.put("/products/:id", authToken, checkAdmin, updateProduct);
 router.get("/get-categoryProduct", getCategoryProduct);
 router.get("/category/:categoryName", getCategoryWiseProduct);
 router.get("/product/:id", getSingleProductDetail);
+
+// user add to cart
+router.post("/addtocart", authToken, addToCart);
 export default router;
