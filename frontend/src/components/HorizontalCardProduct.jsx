@@ -3,15 +3,14 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { addToCart } from "../helper/addToCart";
+import PropTypes from "prop-types";
+import { addItem } from "../store/cartSlice";
 const HorizontalCardProduct = ({ categoryName, heading }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const loadingList = new Array(13).fill(null);
 
-  const [scroll, setScroll] = useState(0);
   const scrollElement = useRef();
-
-  const handleAddToCart = async (e, id) => {};
 
   const fetchData = async () => {
     setLoading(true);
@@ -116,5 +115,8 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
     </div>
   );
 };
-
+HorizontalCardProduct.propTypes = {
+  categoryName: PropTypes.string.isRequired,
+  heading: PropTypes.string.isRequired,
+};
 export default HorizontalCardProduct;

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaStar, FaStarHalf } from "react-icons/fa";
+import RecommendedProduct from "../components/RecommendedProduct";
 
 const ProductDetails = () => {
   const [data, setData] = useState();
@@ -50,7 +51,7 @@ const ProductDetails = () => {
   const handleLeaveImageZoom = () => {
     setZoomImage(false);
   };
-
+  console.log(data);
   return (
     <div className="container mx-auto p-4">
       <div className="min-h-[200px] flex flex-col lg:flex-row gap-4">
@@ -156,8 +157,8 @@ const ProductDetails = () => {
             </div>
 
             <div className="flex items-center gap-2 text-2xl lg:text-3xl font-medium my-1">
-              <p className="text-red-600">${data.sellingPrice}</p>
-              <p className="text-slate-400 line-through">${data.price}</p>
+              <p className="text-red-600">₹{data.sellingPrice}</p>
+              <p className="text-slate-400 line-through">₹{data.price}</p>
             </div>
 
             <div className="flex items-center gap-3 my-2">
@@ -176,6 +177,14 @@ const ProductDetails = () => {
           </div>
         )}
       </div>
+
+      {/* Recommended Product */}
+      {data?.category && (
+        <RecommendedProduct
+          categoryName={data?.category}
+          heading={"Recommended Product"}
+        />
+      )}
     </div>
   );
 };
