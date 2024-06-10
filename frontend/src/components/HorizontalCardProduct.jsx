@@ -5,13 +5,20 @@ import axios from "axios";
 import { addToCart } from "../helper/addToCart";
 import PropTypes from "prop-types";
 import { addItem } from "../store/cartSlice";
+import { useDispatch } from "react-redux";
 const HorizontalCardProduct = ({ categoryName, heading }) => {
+  const dispatch = useDispatch();
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const loadingList = new Array(13).fill(null);
 
   const scrollElement = useRef();
-
+  const handleAddItem = async (e, item) => {
+    await addToCart(e, item._id);
+    dispatch(addItem(item));
+    console.log(item);
+  };
   const fetchData = async () => {
     setLoading(true);
     const res = await axios.get(`/api/category/${categoryName}`);
@@ -103,7 +110,7 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
                     </div>
                     <button
                       className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
-                      onClick={(e) => addToCart(e, product?._id)}
+                      onClick={(e) => handleAddItem(e, product)}
                     >
                       Add to Cart
                     </button>

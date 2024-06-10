@@ -9,6 +9,7 @@ import AllProduct from "../pages/AllProduct.jsx";
 import Home from "../pages/Home.jsx";
 import CategoryProduct from "../components/CategoryProduct.jsx";
 import ProductDetails from "../pages/ProductDetails.jsx";
+import Cart from "../components/Cart.jsx";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "product/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
       },
       {
         path: "admin-panel",

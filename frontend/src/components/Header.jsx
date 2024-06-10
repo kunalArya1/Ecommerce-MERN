@@ -10,10 +10,13 @@ import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/userSlice";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 const Header = () => {
   const userData = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const items = useSelector((state) => state.cart.items);
+
   const [menuDisplay, setMenuDisplay] = useState(false);
   // console.log("userData", userData);
 
@@ -85,7 +88,7 @@ const Header = () => {
           <div className="col-span-2 sm:col-span-1 text-center">
             <Link to="/cart" className="relative inline-block">
               <span className="font-bold absolute top-0 right-0 -mt-2 -mr-2 px-2 py-1 rounded-full bg-red-500 text-white">
-                {0}
+                {items.length}
               </span>
               <FaShoppingCart className="w-10 h-10 cursor-pointer" />
             </Link>
