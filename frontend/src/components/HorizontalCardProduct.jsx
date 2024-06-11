@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { addToCart } from "../helper/addToCart";
 import PropTypes from "prop-types";
 import { addItem } from "../store/cartSlice";
 import { useDispatch } from "react-redux";
+
 const HorizontalCardProduct = ({ categoryName, heading }) => {
   const dispatch = useDispatch();
 
@@ -14,27 +15,33 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
   const loadingList = new Array(13).fill(null);
 
   const scrollElement = useRef();
+
   const handleAddItem = async (e, item) => {
-    await addToCart(e, item._id);
-    dispatch(addItem(item));
-    console.log(item);
+    const result = await addToCart(e, item._id);
+    if (result && result.success) {
+      dispatch(addItem(item));
+    }
   };
+
   const fetchData = async () => {
     setLoading(true);
-    const res = await axios.get(`/api/category/${categoryName}`);
+    try {
+      const res = await axios.get(`/api/category/${categoryName}`);
+      setData(res.data.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
     setLoading(false);
-
-    // console.log("horizontal data", res.data);
-    setData(res?.data?.data);
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [categoryName]);
 
   const scrollRight = () => {
     scrollElement.current.scrollLeft += 300;
   };
+
   const scrollLeft = () => {
     scrollElement.current.scrollLeft -= 300;
   };
@@ -61,69 +68,67 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
         </button>
 
         {loading
-          ? loadingList.map((product, index) => {
-              return (
-                <div
-                  className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white rounded-sm shadow flex"
-                  key={index}
-                >
-                  <div className="bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px] animate-pulse"></div>
-                  <div className="p-4 grid w-full gap-2">
-                    <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black bg-slate-200 animate-pulse p-1 rounded-full"></h2>
-                    <p className="capitalize text-slate-500 p-1 bg-slate-200 animate-pulse rounded-full"></p>
-                    <div className="flex gap-3 w-full">
-                      <p className="text-red-600 font-medium p-1 bg-slate-200 w-full animate-pulse rounded-full"></p>
-                      <p className="text-slate-500 line-through p-1 bg-slate-200 w-full animate-pulse rounded-full"></p>
-                    </div>
-                    <button className="text-sm  text-white px-3 py-0.5 rounded-full w-full bg-slate-200 animate-pulse"></button>
+          ? loadingList.map((_, index) => (
+              <div
+                className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white rounded-sm shadow flex"
+                key={index}
+              >
+                <div className="bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px] animate-pulse"></div>
+                <div className="p-4 grid w-full gap-2">
+                  <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black bg-slate-200 animate-pulse p-1 rounded-full"></h2>
+                  <p className="capitalize text-slate-500 p-1 bg-slate-200 animate-pulse rounded-full"></p>
+                  <div className="flex gap-3 w-full">
+                    <p className="text-red-600 font-medium p-1 bg-slate-200 w-full animate-pulse rounded-full"></p>
+                    <p className="text-slate-500 line-through p-1 bg-slate-200 w-full animate-pulse rounded-full"></p>
                   </div>
+                  <button className="text-sm text-white px-3 py-0.5 rounded-full w-full bg-slate-200 animate-pulse"></button>
                 </div>
-              );
-            })
-          : data.map((product, index) => {
-              return (
-                <Link
-                  key={index}
-                  to={"product/" + product?._id}
-                  className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white rounded-sm shadow flex"
-                >
-                  <div className="bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px]">
-                    <img
-                      src={product.images[0]}
-                      className="object-scale-down h-full hover:scale-110 transition-all"
-                    />
-                  </div>
-                  <div className="p-4 grid">
-                    <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black">
-                      {product?.productName}
-                    </h2>
-                    <p className="capitalize text-slate-500">
-                      {product?.category}
+              </div>
+            ))
+          : data.map((product, index) => (
+              <Link
+                key={index}
+                to={"product/" + product?._id}
+                className="w-full min-w-[280px] md:min-w-[320px] max-w-[280px] md:max-w-[320px] h-36 bg-white rounded-sm shadow flex"
+              >
+                <div className="bg-slate-200 h-full p-4 min-w-[120px] md:min-w-[145px]">
+                  <img
+                    src={product.images[0]}
+                    className="object-scale-down h-full hover:scale-110 transition-all"
+                  />
+                </div>
+                <div className="p-4 grid">
+                  <h2 className="font-medium text-base md:text-lg text-ellipsis line-clamp-1 text-black">
+                    {product?.productName}
+                  </h2>
+                  <p className="capitalize text-slate-500">
+                    {product?.category}
+                  </p>
+                  <div className="flex gap-3">
+                    <p className="text-red-600 font-medium">
+                      ₹{product?.sellingPrice}
                     </p>
-                    <div className="flex gap-3">
-                      <p className="text-red-600 font-medium">
-                        ₹{product?.sellingPrice}
-                      </p>
-                      <p className="text-slate-500 line-through">
-                        ₹{product?.price}
-                      </p>
-                    </div>
-                    <button
-                      className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
-                      onClick={(e) => handleAddItem(e, product)}
-                    >
-                      Add to Cart
-                    </button>
+                    <p className="text-slate-500 line-through">
+                      ₹{product?.price}
+                    </p>
                   </div>
-                </Link>
-              );
-            })}
+                  <button
+                    className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
+                    onClick={(e) => handleAddItem(e, product)}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </Link>
+            ))}
       </div>
     </div>
   );
 };
+
 HorizontalCardProduct.propTypes = {
   categoryName: PropTypes.string.isRequired,
   heading: PropTypes.string.isRequired,
 };
+
 export default HorizontalCardProduct;

@@ -7,7 +7,7 @@ export const authToken = async (req, res, next) => {
     // console.log("token", token);
     if (!token) {
       return res.status(401).json({
-        message: "User not logged in",
+        message: "Please Login",
         error: true,
         success: false,
       });
@@ -23,6 +23,7 @@ export const authToken = async (req, res, next) => {
       }
 
       req.user = decoded;
+      // console.log("user ", req.user.userId);
       next();
     });
   } catch (error) {

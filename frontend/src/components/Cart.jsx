@@ -17,7 +17,7 @@ const Cart = () => {
       ) : (
         <ul className="space-y-4">
           {items.map((item) => (
-            <li key={item.id} className="bg-white p-4 rounded-lg shadow">
+            <li key={item} className="bg-white p-4 rounded-lg shadow">
               <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-4">
                   <img

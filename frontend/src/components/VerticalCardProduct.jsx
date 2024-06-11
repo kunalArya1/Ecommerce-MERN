@@ -13,9 +13,11 @@ const VerticalCardProduct = ({ categoryName, heading }) => {
   const dispatch = useDispatch();
   const scrollElement = useRef();
   const handleAddItem = async (e, item) => {
-    await addToCart(e, item._id);
-    dispatch(addItem(item));
-    console.log(item);
+    const result = await addToCart(e, item._id);
+    if (result && result.success) {
+      dispatch(addItem(item));
+    }
+    // console.log(result);
   };
   const fetchData = async () => {
     setLoading(true);
