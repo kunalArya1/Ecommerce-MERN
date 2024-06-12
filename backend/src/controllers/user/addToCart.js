@@ -4,7 +4,7 @@ export const addToCart = async (req, res) => {
   try {
     const { productId } = req?.body;
     const { userId } = req?.user; // This is set in authToken middleware
-    console.log("userId", userId);
+    // console.log("userId", userId);
     const isProductExist = await addToCartartModel.findOne({ productId });
 
     if (isProductExist) {

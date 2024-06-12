@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -6,10 +6,10 @@ import { addToCart } from "../helper/addToCart";
 import PropTypes from "prop-types";
 import { addItem } from "../store/cartSlice";
 import { useDispatch } from "react-redux";
-
+import Context from "../context";
 const HorizontalCardProduct = ({ categoryName, heading }) => {
   const dispatch = useDispatch();
-
+  const { fetchUserCart } = useContext(Context); // Consume the fetchUserCart function from context
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const loadingList = new Array(13).fill(null);
@@ -19,9 +19,11 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
   const handleAddItem = async (e, item) => {
     const result = await addToCart(e, item._id);
     if (result && result.success) {
-      dispatch(addItem(item));
+      const res = await axios.get(`/api/getproduct/${result.data.productId}`);
+
+      dispatch(addItem(res.data.data));
+      fetchUserCart();
     }
-    // console.log(result);
   };
 
   const fetchData = async () => {

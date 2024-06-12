@@ -16,7 +16,7 @@ const Login = () => {
   });
   const navigate = useNavigate();
   const { fetchUserDetails } = useContext(Context);
-
+  const { fetchUserCart } = useContext(Context);
   const handleOnChange = (e) => {
     const { name, value } = e.target;
     setData((prev) => ({
@@ -41,6 +41,7 @@ const Login = () => {
       console.log(res.data);
       navigate("/");
       fetchUserDetails();
+      fetchUserCart();
     } catch (error) {
       setIsLoading(false);
       toast.error(
