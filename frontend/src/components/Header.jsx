@@ -8,15 +8,15 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { setUserDetails } from "../store/userSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const userData = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const items = useSelector((state) => state.cart.items);
-
+  // const items = useSelector((state) => state.cart.items);
+  const [length, setLenght] = useState();
   const [menuDisplay, setMenuDisplay] = useState(false);
   // console.log("userData", userData);
 
@@ -35,6 +35,16 @@ const Header = () => {
     }
     // console.log(fetchData);
   };
+
+  const fetchUserCart = async () => {
+    const res = await axios.get("/api/countAddToCartProduct");
+    console.log(res.data);
+    setLenght(res.data.data.count);
+  };
+
+  useEffect(() => {
+    fetchUserCart();
+  }, []);
   return (
     <header className="h-16 shadow-md bg-white fixed w-full z-40">
       <div className="h-full container mx-auto flex items-center px-2 justify-between">
@@ -88,7 +98,7 @@ const Header = () => {
           <div className="col-span-2 sm:col-span-1 text-center">
             <Link to="/cart" className="relative inline-block">
               <span className="font-bold absolute top-0 right-0 -mt-2 -mr-2 px-2 py-1 rounded-full bg-red-500 text-white">
-                {items.length}
+                {length}
               </span>
               <FaShoppingCart className="w-10 h-10 cursor-pointer" />
             </Link>

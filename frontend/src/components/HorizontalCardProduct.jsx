@@ -21,6 +21,7 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
     if (result && result.success) {
       dispatch(addItem(item));
     }
+    // console.log(result);
   };
 
   const fetchData = async () => {

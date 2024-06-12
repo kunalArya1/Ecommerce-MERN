@@ -10,6 +10,12 @@ import { useDispatch } from "react-redux";
 import { setUserDetails } from "./store/userSlice.js";
 const App = () => {
   const dispatch = useDispatch();
+
+  const fetchUserCart = async () => {
+    const res = await axios.get("/api/countAddToCartProduct");
+    console.log(res.data);
+  };
+
   const fetchUserDetails = async () => {
     const dataResponse = await axios.get("/api/user-details", {
       withCredentials: true,
@@ -23,6 +29,7 @@ const App = () => {
   useEffect(() => {
     // function call
     fetchUserDetails();
+    fetchUserCart();
   }, []);
   return (
     <>

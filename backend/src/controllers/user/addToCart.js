@@ -4,10 +4,9 @@ export const addToCart = async (req, res) => {
   try {
     const { productId } = req?.body;
     const { userId } = req?.user; // This is set in authToken middleware
-    // console.log("userId", userId);
+    console.log("userId", userId);
     const isProductExist = await addToCartartModel.findOne({ productId });
-    console.log("product Id ", productId);
-    // console.log(isProductExist);
+
     if (isProductExist) {
       return res.json({
         message: "Already exist in Add to cart",
@@ -15,17 +14,18 @@ export const addToCart = async (req, res) => {
         error: true,
       });
     }
+
     const payload = {
       productId: productId,
       quantity: 1,
-      userId: currentUser,
+      userId,
     };
     const newAddToCart = new addToCartartModel(payload);
     const savedProduct = await newAddToCart.save();
 
     return res.json({
       data: savedProduct,
-      message: "Product Added",
+      message: "Product Added in cart",
       success: true,
       error: false,
     });
