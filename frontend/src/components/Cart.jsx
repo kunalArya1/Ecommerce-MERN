@@ -45,7 +45,7 @@ const Cart = () => {
 
     if (res.data.success) {
       setData(res.data.data);
-      console.log(res.data.data);
+      // console.log(res.data.data);
     }
   };
 
@@ -59,10 +59,59 @@ const Cart = () => {
     setLoading(false);
   }, []);
 
-  // const increaseQty = async(id,qty) =>{
+  const increaseQty = async (id, qty) => {
+    try {
+      const response = await axios.post(
+        "/api/update-cart-product",
+        {
+          _id: id,
+          quantity: qty + 1,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-  // }
+      const responseData = response.data;
+      console.log(responseData);
+      if (responseData.success) {
+        fetchData();
+      }
+    } catch (error) {
+      console.error("Error updating quantity:", error);
+    }
+  };
 
+  const decreaseQty = async (id, qty) => {
+    if (qty >= 2) {
+      try {
+        const response = await axios.post(
+          "/api/update-cart-product",
+          {
+            _id: id,
+            quantity: qty - 1,
+          },
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const responseData = response.data;
+        console.log(responseData);
+        if (responseData.success) {
+          fetchData();
+        }
+      } catch (error) {
+        console.error("Error updating quantity:", error);
+      }
+    }
+  };
   return (
     <div className="container mx-auto">
       <div className="text-center text-lg my-3">
@@ -116,11 +165,21 @@ const Cart = () => {
                         </p>
                       </div>
                       <div className="flex items-center gap-3 mt-1">
-                        <button className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-6 h-6 flex justify-center items-center rounded ">
+                        <button
+                          className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-6 h-6 flex justify-center items-center rounded "
+                          onClick={() =>
+                            decreaseQty(product?._id, product?.quantity)
+                          }
+                        >
                           -
                         </button>
                         <span>{product?.quantity}</span>
-                        <button className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-6 h-6 flex justify-center items-center rounded ">
+                        <button
+                          className="border border-red-600 text-red-600 hover:bg-red-600 hover:text-white w-6 h-6 flex justify-center items-center rounded "
+                          onClick={() =>
+                            increaseQty(product?._id, product?.quantity)
+                          }
+                        >
                           +
                         </button>
                       </div>
