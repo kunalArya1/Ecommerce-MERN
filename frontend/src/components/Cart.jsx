@@ -1,43 +1,16 @@
-// import { useEffect, useState } from "react";
 import axios from "axios";
-// const Cart = () => {
-//   const [data, setData] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const fetchData = async () => {
-//     const res = await axios.get("/api/view-cart-product");
-//     console.log(res.data.data);
-//     setData(res.data.data);
-//     setLoading(false);
-//   };
-//   useEffect(() => {
-//     fetchData();
-//   }, []);
-//   return (
-//     <div className="container mx-auto">
-//       <div className="text-center text-lg my-3">
-//         {loading && <p>No Data</p>}
-//       </div>
-//       <div>
-//         {data.map((item) => (
-//           <img src={item.productId.images[0]} alt="" key={item} />
-//         ))}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Cart;
 
 import { useContext, useEffect, useState } from "react";
 
 import Context from "../context";
 
 import { MdDelete } from "react-icons/md";
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const context = useContext(Context);
+  const { fetchUserCart } = useContext(Context);
   const loadingCart = new Array(4).fill(null);
 
   const fetchData = async () => {
@@ -58,6 +31,26 @@ const Cart = () => {
     handleLoading();
     setLoading(false);
   }, []);
+
+  const deleteProductCartHandler = async (id) => {
+    try {
+      const res = await axios.delete("/api/delete-cart-product", {
+        data: { productId: id }, // Send productId in the request body
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.data.success === true) {
+        toast.success(res.data.message);
+        fetchData();
+        fetchUserCart();
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error(error.message);
+    }
+  };
 
   const increaseQty = async (id, qty) => {
     try {
@@ -103,7 +96,7 @@ const Cart = () => {
         );
 
         const responseData = response.data;
-        console.log(responseData);
+        // console.log(responseData);
         if (responseData.success) {
           fetchData();
         }
@@ -147,7 +140,9 @@ const Cart = () => {
                     <div className="px-4 py-2 relative">
                       {/**delete product */}
                       <div className="absolute right-0 text-red-600 rounded-full p-2 hover:bg-red-600 hover:text-white cursor-pointer">
-                        <MdDelete />
+                        <MdDelete
+                          onClick={() => deleteProductCartHandler(product?._id)}
+                        />
                       </div>
 
                       <h2 className="text-lg lg:text-xl text-ellipsis line-clamp-1">
@@ -158,10 +153,10 @@ const Cart = () => {
                       </p>
                       <div className="flex items-center justify-between">
                         <p className="text-red-600 font-medium text-lg">
-                          {product?.productId?.sellingPrice}
+                          ₹{product?.productId?.sellingPrice}
                         </p>
                         <p className="text-slate-600 font-semibold text-lg">
-                          {product?.productId?.sellingPrice}
+                          ₹{product?.productId?.price}
                         </p>
                       </div>
                       <div className="flex items-center gap-3 mt-1">
