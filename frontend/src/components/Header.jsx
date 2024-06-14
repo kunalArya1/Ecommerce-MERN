@@ -37,6 +37,15 @@ const Header = () => {
     // console.log(fetchData);
   };
 
+  const searchHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.value;
+    if (value) {
+      navigate(`/search?q=${value}`);
+    } else {
+      navigate("/search");
+    }
+  };
   return (
     <header className="h-16 shadow-md bg-white fixed w-full z-40">
       <div className="h-full container mx-auto flex items-center px-2 justify-between">
@@ -50,6 +59,7 @@ const Header = () => {
             type="text"
             placeholder="search product here..."
             className="w-full outline-none"
+            onChange={searchHandler}
           />
           <div className="text-lg min-w-[50px] h-8 bg-red-600 flex items-center justify-center rounded-r-full text-white">
             <GrSearch />

@@ -3,9 +3,12 @@ import { addToCartartModel } from "../../models/cartProduct.js";
 export const addToCart = async (req, res) => {
   try {
     const { productId } = req?.body;
-    const { userId } = req?.user; // This is set in authToken middleware
-    // console.log("userId", userId);
-    const isProductExist = await addToCartartModel.findOne({ productId });
+    const { userId } = req?.user;
+
+    const isProductExist = await addToCartartModel.findOne({
+      productId,
+      userId,
+    });
 
     if (isProductExist) {
       return res.json({
@@ -16,7 +19,7 @@ export const addToCart = async (req, res) => {
     }
 
     const payload = {
-      productId: productId,
+      productId,
       quantity: 1,
       userId,
     };

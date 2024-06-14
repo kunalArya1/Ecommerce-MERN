@@ -21,6 +21,7 @@ import { getProductById } from "../controllers/Product/getProductById.js";
 import { addToCartViewProduct } from "../controllers/user/addToCartViewProduct.js";
 import { updateAddToCart } from "../controllers/user/updateAddToCartProduct.js";
 import { deleteAddToCartProduct } from "../controllers/user/deleteAddToCartProduct.js";
+import { searchProduct } from "../controllers/Product/searchProduct.js";
 
 const router = express.Router();
 
@@ -40,7 +41,7 @@ router.put("/products/:id", authToken, checkAdmin, updateProduct);
 router.get("/get-categoryProduct", getCategoryProduct);
 router.get("/category/:categoryName", getCategoryWiseProduct);
 router.get("/product/:id", getSingleProductDetail);
-
+router.get("/search", searchProduct);
 // user add to cart
 router.post("/addtocart", authToken, addToCart);
 router.post("/removefromcart", authToken, removeToCart); // Add this line

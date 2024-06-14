@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import Context from "../context";
 
@@ -105,6 +105,19 @@ const Cart = () => {
       }
     }
   };
+
+  const totalQuantity = useMemo(() => {
+    return data.reduce((total, product) => total + product.quantity, 0);
+  }, [data]);
+
+  const totalPrice = useMemo(() => {
+    return data.reduce(
+      (total, product) =>
+        total + product.productId.sellingPrice * product.quantity,
+      0
+    );
+  }, [data]);
+
   return (
     <div className="container mx-auto">
       <div className="text-center text-lg my-3">
@@ -125,7 +138,7 @@ const Cart = () => {
                   ></div>
                 );
               })
-            : data.map((product, index) => {
+            : data.map((product) => {
                 return (
                   <div
                     key={product?._id + "Add To Cart Loading"}
@@ -139,10 +152,11 @@ const Cart = () => {
                     </div>
                     <div className="px-4 py-2 relative">
                       {/**delete product */}
-                      <div className="absolute right-0 text-red-600 rounded-full p-2 hover:bg-red-600 hover:text-white cursor-pointer">
-                        <MdDelete
-                          onClick={() => deleteProductCartHandler(product?._id)}
-                        />
+                      <div
+                        className="absolute right-0 text-red-600 rounded-full p-2 hover:bg-red-600 hover:text-white cursor-pointer"
+                        onClick={() => deleteProductCartHandler(product?._id)}
+                      >
+                        <MdDelete />
                       </div>
 
                       <h2 className="text-lg lg:text-xl text-ellipsis line-clamp-1">
@@ -153,10 +167,11 @@ const Cart = () => {
                       </p>
                       <div className="flex items-center justify-between">
                         <p className="text-red-600 font-medium text-lg">
-                          ₹{product?.productId?.sellingPrice}
+                          {product?.productId?.sellingPrice}
                         </p>
                         <p className="text-slate-600 font-semibold text-lg">
-                          ₹{product?.productId?.price}
+                          ₹
+                          {product?.productId?.sellingPrice * product?.quantity}
                         </p>
                       </div>
                       <div className="flex items-center gap-3 mt-1">
@@ -193,12 +208,12 @@ const Cart = () => {
               <h2 className="text-white bg-red-600 px-4 py-1">Summary</h2>
               <div className="flex items-center justify-between px-4 gap-2 font-medium text-lg text-slate-600">
                 <p>Quantity</p>
-                {/* <p>{totalQty}</p> */}
+                <p>{totalQuantity}</p>
               </div>
 
               <div className="flex items-center justify-between px-4 gap-2 font-medium text-lg text-slate-600">
                 <p>Total Price</p>
-                {/* <p>{displayINRCurrency(totalPrice)}</p>     */}
+                <p>₹{totalPrice}</p>
               </div>
 
               <button className="bg-blue-600 p-2 text-white w-full mt-2">
