@@ -1,15 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-
-import { FaAngleLeft, FaAngleRight } from "react-icons/fa6";
+import { useContext, useEffect, useState } from "react";
+import Context from "../context";
 import { Link } from "react-router-dom";
-
+import PropTypes from "prop-types";
 import axios from "axios";
 import { addToCart } from "../helper/addToCart";
-const RecommendedProduct = ({ categoryName, heading }) => {
+const RecommendedProduct = ({ categoryName, heading, currentProduct }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const loadingList = new Array(13).fill(null);
-
+  const { fetchUserCart } = useContext(Context);
   const fetchData = async () => {
     setLoading(true);
     const res = await axios.get(`/api/category/${categoryName}`);
@@ -21,7 +20,14 @@ const RecommendedProduct = ({ categoryName, heading }) => {
   useEffect(() => {
     fetchData();
   }, []);
+  const filteredData = data.filter((product) => product._id !== currentProduct);
 
+  const handleAddItem = async (e, item) => {
+    const result = await addToCart(e, item._id);
+    if (result && result.success) {
+      fetchUserCart();
+    }
+  };
   return (
     <div className="container mx-auto px-4 my-6 relative">
       <h2 className="text-2xl font-semibold py-4">{heading}</h2>
@@ -47,10 +53,10 @@ const RecommendedProduct = ({ categoryName, heading }) => {
                 </div>
               );
             })
-          : data.map((product, index) => {
+          : filteredData.map((product, index) => {
               return (
                 <Link
-                  to={"product/" + product?._id}
+                  to={"/product/" + product?._id}
                   className="w-full min-w-[280px]  md:min-w-[320px] max-w-[280px] md:max-w-[320px]  bg-white rounded-sm shadow "
                   key={index}
                 >
@@ -78,7 +84,7 @@ const RecommendedProduct = ({ categoryName, heading }) => {
 
                     <button
                       className="text-sm bg-red-600 hover:bg-red-700 text-white px-3 py-0.5 rounded-full"
-                      onClick={(e) => addToCart(e, product?._id)}
+                      onClick={(e) => handleAddItem(e, product)}
                     >
                       Add to Cart
                     </button>
@@ -91,4 +97,9 @@ const RecommendedProduct = ({ categoryName, heading }) => {
   );
 };
 
+RecommendedProduct.propTypes = {
+  categoryName: PropTypes.string.isRequired,
+  heading: PropTypes.string.isRequired,
+  currentProduct: PropTypes.string.isRequired,
+};
 export default RecommendedProduct;

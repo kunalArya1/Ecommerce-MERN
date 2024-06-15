@@ -1,16 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { FaStar, FaStarHalf } from "react-icons/fa";
 import RecommendedProduct from "../components/RecommendedProduct";
-
+import { addToCart } from "../helper/addToCart";
+import Context from "../context";
 const ProductDetails = () => {
   const [data, setData] = useState();
   const { id } = useParams();
   const [loading, setLoading] = useState(true);
   const productImageListLoading = new Array(4).fill(null);
   const [activeImage, setActiveImage] = useState("");
-
+  const { fetchUserCart } = useContext(Context);
   const [zoomImageCoordinate, setZoomImageCoordinate] = useState({
     x: 0,
     y: 0,
@@ -52,6 +53,13 @@ const ProductDetails = () => {
     setZoomImage(false);
   };
   // console.log(data);
+
+  const handleAddItem = async (e, item) => {
+    const result = await addToCart(e, item._id);
+    if (result && result.success) {
+      fetchUserCart();
+    }
+  };
   return (
     <div className="container mx-auto p-4">
       <div className="min-h-[200px] flex flex-col lg:flex-row gap-4">
@@ -165,7 +173,10 @@ const ProductDetails = () => {
               <button className="border-2 border-red-600 rounded px-3 py-1 min-w-[120px] text-red-600 font-medium hover:bg-red-600 hover:text-white transition duration-300 ease-in-out">
                 Buy
               </button>
-              <button className="border-2 border-red-600 rounded px-3 py-1 min-w-[120px] font-medium text-white bg-red-600 hover:text-red-600 hover:bg-white transition duration-300 ease-in-out">
+              <button
+                className="border-2 border-red-600 rounded px-3 py-1 min-w-[120px] font-medium text-white bg-red-600 hover:text-red-600 hover:bg-white transition duration-300 ease-in-out"
+                onClick={(e) => handleAddItem(e, data)}
+              >
                 Add To Cart
               </button>
             </div>
@@ -183,6 +194,7 @@ const ProductDetails = () => {
         <RecommendedProduct
           categoryName={data?.category}
           heading={"Recommended Product"}
+          currentProduct={id}
         />
       )}
     </div>

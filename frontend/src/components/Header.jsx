@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import shopsy from "../assets/shopsy.png";
 import { GrSearch } from "react-icons/gr";
 import { FaRegCircleUser } from "react-icons/fa6";
@@ -14,6 +14,8 @@ import Context from "../context";
 const Header = () => {
   const userData = useSelector((state) => state?.user?.user);
   const { cartProductCount } = useContext(Context);
+  const searchInput = useLocation();
+  const [search, setSearch] = useState(searchInput?.search?.split("=")[1]);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -40,6 +42,7 @@ const Header = () => {
   const searchHandler = (e) => {
     e.preventDefault();
     const value = e.target.value;
+    setSearch(value);
     if (value) {
       navigate(`/search?q=${value}`);
     } else {
@@ -60,6 +63,7 @@ const Header = () => {
             placeholder="search product here..."
             className="w-full outline-none"
             onChange={searchHandler}
+            value={search}
           />
           <div className="text-lg min-w-[50px] h-8 bg-red-600 flex items-center justify-center rounded-r-full text-white">
             <GrSearch />
