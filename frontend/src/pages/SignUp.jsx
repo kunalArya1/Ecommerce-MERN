@@ -70,7 +70,7 @@ const SignUp = () => {
     } catch (error) {
       if (error.response) {
         if (error.response.status === 409) {
-          toast.error("User already registered", { position: "top-right" });
+          toast.error("User already registered", { position: "top-center" });
           setError("User already registered");
         } else {
           toast.error(error.response.data.message || "User can't register", {
@@ -79,7 +79,7 @@ const SignUp = () => {
           setError(error.response.data.message || "User can't register");
         }
       } else {
-        toast.error("An error occurred", { position: "top-right" });
+        toast.error("An error occurred", { position: "top-center" });
         setError("An error occurred");
       }
       console.error("User can't register", error);

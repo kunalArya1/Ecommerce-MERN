@@ -28,7 +28,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!data.email || !data.password) {
-      toast.error("Please fill in all fields", { position: "top-right" });
+      toast.error("Please fill in all fields", { position: "top-center" });
       return;
     }
 
@@ -36,7 +36,7 @@ const Login = () => {
     try {
       const res = await axios.post("/api/login", data);
 
-      toast.success("User logged in successfully", { position: "top-right" });
+      toast.success("User logged in successfully", { position: "top-center" });
       setIsLoading(false);
       console.log(res.data);
       navigate("/");
@@ -46,7 +46,7 @@ const Login = () => {
       setIsLoading(false);
       toast.error(
         error.response?.data?.message || "An error occurred. Please try again.",
-        { position: "top-right" }
+        { position: "top-center" }
       );
     }
   };

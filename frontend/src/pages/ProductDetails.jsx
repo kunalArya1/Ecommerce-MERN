@@ -5,6 +5,7 @@ import { FaStar, FaStarHalf } from "react-icons/fa";
 import RecommendedProduct from "../components/RecommendedProduct";
 import { addToCart } from "../helper/addToCart";
 import Context from "../context";
+import { useNavigate } from "react-router-dom";
 const ProductDetails = () => {
   const [data, setData] = useState();
   const { id } = useParams();
@@ -12,6 +13,7 @@ const ProductDetails = () => {
   const productImageListLoading = new Array(4).fill(null);
   const [activeImage, setActiveImage] = useState("");
   const { fetchUserCart } = useContext(Context);
+  const navigate = useNavigate();
   const [zoomImageCoordinate, setZoomImageCoordinate] = useState({
     x: 0,
     y: 0,
@@ -55,10 +57,15 @@ const ProductDetails = () => {
   // console.log(data);
 
   const handleAddItem = async (e, item) => {
-    const result = await addToCart(e, item._id);
-    if (result && result.success) {
-      fetchUserCart();
-    }
+    await addToCart(e, item._id);
+
+    fetchUserCart();
+  };
+
+  const handleBuyItem = async (e, item) => {
+    await addToCart(e, item._id);
+    fetchUserCart();
+    navigate("/cart");
   };
   return (
     <div className="container mx-auto p-4">
@@ -170,7 +177,10 @@ const ProductDetails = () => {
             </div>
 
             <div className="flex items-center gap-3 my-2">
-              <button className="border-2 border-red-600 rounded px-3 py-1 min-w-[120px] text-red-600 font-medium hover:bg-red-600 hover:text-white transition duration-300 ease-in-out">
+              <button
+                className="border-2 border-red-600 rounded px-3 py-1 min-w-[120px] text-red-600 font-medium hover:bg-red-600 hover:text-white transition duration-300 ease-in-out"
+                onClick={(e) => handleBuyItem(e, data)}
+              >
                 Buy
               </button>
               <button

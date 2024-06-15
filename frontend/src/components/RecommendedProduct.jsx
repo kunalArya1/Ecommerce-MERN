@@ -23,10 +23,9 @@ const RecommendedProduct = ({ categoryName, heading, currentProduct }) => {
   const filteredData = data.filter((product) => product._id !== currentProduct);
 
   const handleAddItem = async (e, item) => {
-    const result = await addToCart(e, item._id);
-    if (result && result.success) {
-      fetchUserCart();
-    }
+    await addToCart(e, item._id);
+
+    fetchUserCart();
   };
   return (
     <div className="container mx-auto px-4 my-6 relative">

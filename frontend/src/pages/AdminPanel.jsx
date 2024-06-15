@@ -3,12 +3,13 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
+import toast from "react-hot-toast";
 const AdminPanel = () => {
   const user = useSelector((state) => state?.user?.user);
   const [allUser, setAllUser] = useState([]);
   const [editingUserId, setEditingUserId] = useState(null);
   const [selectedRole, setSelectedRole] = useState("");
+
   const navigate = useNavigate();
 
   const getAllUser = async () => {
@@ -30,7 +31,11 @@ const AdminPanel = () => {
       await axios.put(`/api/users/${userId}`, { role: selectedRole });
       setEditingUserId(null);
       await getAllUser();
-      navigate(0); // This will refresh the page
+      toast.success("User updated!", { position: "top-center" });
+
+      setTimeout(() => {
+        navigate(0);
+      }, 1000);
     } catch (error) {
       console.log(error);
     }

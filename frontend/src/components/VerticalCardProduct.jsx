@@ -15,10 +15,9 @@ const VerticalCardProduct = ({ categoryName, heading }) => {
   const scrollElement = useRef();
 
   const handleAddItem = async (e, item) => {
-    const result = await addToCart(e, item._id);
-    if (result && result.success) {
-      fetchUserCart();
-    }
+    await addToCart(e, item._id);
+
+    fetchUserCart();
   };
   const fetchData = async () => {
     setLoading(true);
