@@ -24,3 +24,6 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api", router);
+app.get("/", (req, res) => {
+  res.json({ message: "Deployed successfully" });
+});
