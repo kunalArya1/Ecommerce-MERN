@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:7000",
+        target: "https://backend-ecommerce-ecru.vercel.app",
         changeOrigin: true,
       },
     },
