@@ -8,14 +8,11 @@ import cookieParser from "cookie-parser";
 const app = express();
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://ecommerce-mern-app-pi.vercel.app",
-    ],
-    methods: ["POST", "GET", "DELETE"],
+    origin: "*",
     credentials: true,
   })
 );
+
 app.use(bodyParser.json());
 app.use(cookieParser());
 dotenv.config();
