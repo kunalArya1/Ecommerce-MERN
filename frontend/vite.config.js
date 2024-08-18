@@ -6,11 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": {
-        target:
-          "https://backend-ecommerce-oa41deg0k-nirbhays-projects-2655d493.vercel.app",
-        changeOrigin: true,
-      },
+      "/api":
+        "https://backend-ecommerce-oa41deg0k-nirbhays-projects-2655d493.vercel.app",
     },
   },
 });

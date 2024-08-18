@@ -23,6 +23,7 @@ const HorizontalCardProduct = ({ categoryName, heading }) => {
     setLoading(true);
     try {
       const res = await axios.get(`/api/category/${categoryName}`);
+      console.log("res", res);
       setData(res.data.data);
     } catch (error) {
       console.error("Error fetching data:", error);
