@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         target:
-          "https://backend-ecommerce-oa41deg0k-nirbhays-projects-2655d493.vercel.app/",
+          "https://ecom-mern-amber.vercel.app",
         changeOrigin: true,
       },
     },
