@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import router from "./routes/routes.js";
+import router from "./src/routes/routes.js";
 import cookieParser from "cookie-parser";
 const app = express();
 app.use(
